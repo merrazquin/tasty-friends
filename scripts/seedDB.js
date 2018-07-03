@@ -34,9 +34,9 @@ const eventSeed = {
         lng: -80.284628
     },
     dates: [
-        { date: new Date(Date.now()) },
-        { date: new Date('July 15, 2018 19:00:00') },
-        { date: new Date('July 12, 2018 18:30:00') }
+        { _id: mongoose.Types.ObjectId(), date: new Date(Date.now()) },
+        { _id: mongoose.Types.ObjectId(), date: new Date('July 15, 2018 19:00:00') },
+        { _id: mongoose.Types.ObjectId(), date: new Date('July 12, 2018 18:30:00') }
     ]
 }
 
