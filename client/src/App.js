@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import API from './utils/API';
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import './App.css'
+import API from './utils/API'
+import UserSettings from './pages/UserSettings'
 
 class App extends Component {
 
@@ -10,27 +11,27 @@ class App extends Component {
     }
 
     componentDidMount() {
-        this.getUser('testFBAuthId')
+        this.authUser('testFBAuthId')
     }
 
-    getUser = authId => API.getUser(authId)
-        .then(res => { console.log('data',res.data); this.setState({ userInfo: res.data })})
+    authUser = authId => API.getUser(authId)
+        .then(res => this.setState({ userInfo: res.data }))
         .catch(err => console.error(err))
 
     render() {
         return (
             <div className="App">
                 <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <h1 className="App-title">Welcome to React</h1>
+                    <h1 className="App-title">Tasty Friends</h1>
                 </header>
-                <p className="App-intro">
-                    <strong>Display Name:</strong> {this.state.userInfo && this.state.userInfo.displayName}<br/>
-                    <strong>Default Location:</strong> {this.state.userInfo && this.state.userInfo.defaultLocation && this.state.userInfo.defaultLocation.formattedAddress}
-                </p>
+                <Router>
+                    <Switch>
+                        <Route exact path="/" render={routeProps => <UserSettings {...routeProps} userInfo={this.state.userInfo} />} />
+                    </Switch>
+                </Router>
             </div>
-        );
+        )
     }
 }
 
-export default App;
+export default App
