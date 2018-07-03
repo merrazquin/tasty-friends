@@ -2,7 +2,9 @@ const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     locationSchema = new Schema({
         formattedAddress: String,
-        url: String
+        url: String,
+        lat: Number,
+        lng: Number
     }),
     userClubSchema = new Schema({
         club: {
