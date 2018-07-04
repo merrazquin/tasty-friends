@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import './App.css'
+import { Navbar, NavItem } from 'react-materialize'
 import API from './utils/API'
 import UserSettings from './pages/UserSettings'
+import Nav from './components/Nav'
+import './App.css'
 
 class App extends Component {
 
     state = {
         userInfo: null
+    }
+
+    logout(event) {
+        event.preventDefault()
+        console.log('logout')
     }
 
     componentDidMount() {
@@ -20,16 +27,19 @@ class App extends Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <h1 className="App-title">Tasty Friends</h1>
-                </header>
-                <Router>
-                    <Switch>
-                        <Route exact path="/" render={routeProps => <UserSettings {...routeProps} userInfo={this.state.userInfo} />} />
-                    </Switch>
-                </Router>
-            </div>
+            <Router>
+                <div className="App">
+                    <Navbar brand="Tasty Friends" right>
+                        <NavItem onClick={this.logout}>Logout</NavItem>
+                    </Navbar>
+                    <div className="Site-content">
+                        <Switch>
+                            <Route exact path="/settings" render={routeProps => <UserSettings {...routeProps} userInfo={this.state.userInfo} />} />
+                        </Switch>
+                    </div>
+                    <Nav />
+                </div>
+            </Router>
         )
     }
 }
