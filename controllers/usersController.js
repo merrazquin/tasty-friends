@@ -44,8 +44,26 @@ module.exports = {
     },
     joinClub: function (req, res) {
         db.Club
-            .findOneAndUpdate({ _id: req.params.club }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
-            .then(dbModel => res.json(dbModel))
+            .findOneAndUpdate({ _id: req.params.club, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
+            .then(dbModel => {
+                db.User
+                    .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
+                    .populate('clubs.club')
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+            })
+            .catch(err => res.status(422).json(err))
+    },
+    joinClubByInvite: function (req, res) {
+        db.Club
+            .findOneAndUpdate({ inviteCode: req.params.inviteCode, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
+            .then(dbModel => {
+                db.User
+                    .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
+                    .populate('clubs.club')
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+            })
             .catch(err => res.status(422).json(err))
     },
     leaveClub: function (req, res) {

@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
 
-    createUser: function(userInfo) {
+    createUser: function (userInfo) {
         return axios.post('/api/user', userInfo)
     },
     // Gets the user with the given fb auth id
@@ -10,7 +10,11 @@ export default {
         return axios.get('/api/user/' + authId + '/auth')
     },
 
-    updateUserSettings: function(userInfo) {
+    updateUserSettings: function (userInfo) {
         return axios.put('/api/user/' + userInfo._id, userInfo)
+    },
+
+    acceptInvitation: function (userId, inviteCode) {
+        return axios.put('/api/user/' + userId + '/acceptInvite/' + inviteCode)
     }
 }

@@ -20,6 +20,9 @@ router.route('/:id/club/:club')
     .put(usersController.joinClub)
     .delete(usersController.leaveClub)
 
+router.route('/:id/acceptInvite/:inviteCode')
+    .put(usersController.joinClubByInvite)
+
 router.route('/:id/rsvp/:event')
     .put(usersController.rsvpToEvent)
 

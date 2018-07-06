@@ -11,6 +11,10 @@ const mongoose = require('mongoose'),
             type: Schema.Types.ObjectId,
             ref: 'Club'
         },
+        isOwner: {
+            type:Boolean,
+            default: false
+        },
         hostingEnabled: Boolean
     }),
     userSchema = new Schema({

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Row, Input, Preloader } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
+import { Row, Input, Preloader } from 'react-materialize'
 
 class UserSettings extends Component {
     render() {

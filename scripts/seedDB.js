@@ -9,7 +9,7 @@ mongoose.connect(
 );
 
 const userSeed = {
-    authId: 'testFBAuthId',
+    authId: '10108257127581982',
     displayName: 'Faux Account',
     defaultLocation: {
         formattedAddress: '10419 Quito St, Hollywood, FL 33026, USA',

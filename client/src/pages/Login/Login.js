@@ -7,7 +7,6 @@ import AuthUserContext from '../../components/Session/AuthUserContext'
 class Login extends Component {
 
     render() {
-        console.log('render')
         return (
             <Row>
                 <AuthUserContext.Consumer>
@@ -17,7 +16,7 @@ class Login extends Component {
                                 (
                                     <div>
                                         <h1>Hi, {context.userInfo.displayName}</h1>
-                                        <img alt={context.userInfo.displayName + "'s avatar"} className="circle" src={context.userInfo.avatar} />
+                                        {context.userInfo.avatar ? <img alt={context.userInfo.displayName + "'s avatar"} className="circle" src={context.userInfo.avatar} /> : null}
                                         <p>
                                             <Button onClick={context.logout}>Log out</Button>
                                         </p>
