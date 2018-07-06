@@ -4,7 +4,6 @@ import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import { ClubSummary } from '../../components/ClubSummary/ClubSummary';
 
-
 class Clubs extends Component {
     state = {
         inviteCode: '',
@@ -47,7 +46,7 @@ class Clubs extends Component {
                     {this.state.clubs.map(club => <ClubSummary key={club.club._id} club={club} />)}
                 </Collection>
             )
-        } 
+        }
 
         return null
     }

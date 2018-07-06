@@ -16,7 +16,7 @@ class App extends Component {
             <AuthProvider>
                 <Router>
                     <div className="App">
-                        <NavBar />
+                        <NavBar/>
                         <div className="Site-content">
                             <AuthUserContext.Consumer>
                                 {(context) => context.loggedOut ?
@@ -32,7 +32,7 @@ class App extends Component {
                             </Switch>
 
                         </div>
-                        <Nav />
+                        <Route component={Nav} />
                     </div>
                 </Router>
             </AuthProvider>

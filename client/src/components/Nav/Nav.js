@@ -1,28 +1,32 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Icon } from 'react-materialize'
 import AuthUserContext from '../Session/AuthUserContext'
 import './Nav.css'
 
-const Nav = () => (
-    <AuthUserContext.Consumer>
-        {(context) =>
-
-            (<nav className="nav-center">
+class Nav extends Component {
+    render() {
+        const { context, location } = this.props
+        return (
+            <nav className="nav-center">
                 <div className="nav-wrapper container">
                     {context.userInfo ?
                         (
                             <ul>
-                                <li><Link to="/clubs"><Icon>group</Icon></Link></li>
-                                <li><Link to="/events"><Icon>event</Icon></Link></li>
-                                <li><Link to="/settings"><Icon>settings</Icon></Link></li>
+                                <li className={location.pathname === "/clubs" ? 'active' : ''}><Link to="/clubs"><Icon>group</Icon></Link></li>
+                                <li className={location.pathname === "/events" ? 'active' : ''}><Link to="/events"><Icon>event</Icon></Link></li>
+                                <li className={location.pathname === "/settings" ? 'active' : ''}><Link to="/settings"><Icon>settings</Icon></Link></li>
                             </ul>
                         ) : <br />
                     }
                 </div>
-            </nav>)
-        }
-    </AuthUserContext.Consumer>
-)
+            </nav>
+        )
+    }
+}
 
-export default Nav
+export default props => (
+    <AuthUserContext.Consumer>
+        {context => <Nav {...props} context={context} />}
+    </AuthUserContext.Consumer>
+) 

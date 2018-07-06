@@ -39,7 +39,10 @@ class AuthProvider extends Component {
                     API.createUser(userInfo)
                         .then(res => this.setState({ userInfo: res.data }))
                 } else {
-                    this.setState({ userInfo: res.data })
+                    // updates the avatar
+                    API.updateUserSettings({_id: res.data._id, avatar: userInfo.avatar})
+                        .then(res => this.setState({ userInfo: res.data }))
+                    
                 }
             })
             .catch(err => console.error(err))
