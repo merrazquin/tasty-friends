@@ -10,7 +10,8 @@ class AuthProvider extends Component {
         loggedOut: false,
         login: response => this.handleFacebookResponse(response),
         logout: event => this.logout(event),
-        updateUserInfo: event => this.updateUserInfo(event)
+        updateUserInfo: event => this.updateUserInfo(event),
+        replaceUserInfo: userInfo => this.setState({ userInfo: userInfo })
     }
 
     toastActive = false

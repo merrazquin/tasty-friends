@@ -6,7 +6,8 @@ import Nav from '../Nav'
 import NavBar from '../NavBar'
 import Login from '../../pages/Login'
 import UserSettings from '../../pages/UserSettings'
-import Clubs from '../../pages/Clubs/Clubs'
+import Clubs from '../../pages/Clubs/'
+import ClubCreation from '../../pages/ClubCreation'
 import './App.css'
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
                                 <Route exact path="/" component={Login} />
                                 <Route exact path="/settings" component={UserSettings} />
                                 <Route exact path="/clubs" component={Clubs} />
+                                <Route exact path="/clubs/create" component={ClubCreation} />
                             </Switch>
 
                         </div>

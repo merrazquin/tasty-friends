@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Row, Button, Input, Card, Collection } from 'react-materialize'
+import { Row, Button, Input, Card, Collection, Icon } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import { ClubSummary } from '../../components/ClubSummary/ClubSummary';
@@ -24,7 +24,6 @@ class Clubs extends Component {
     render() {
         return (
             <Row>
-                <h5>Clubs</h5>
                 <Card>
                     <Button>Create Club</Button>
                 </Card>
@@ -42,7 +41,7 @@ class Clubs extends Component {
     generateClubsList = () => {
         if (this.state.clubs) {
             return (
-                <Collection className="left-align">
+                <Collection header={(<div><h5>Clubs</h5><Icon className="tiny">grade</Icon> - Owner</div>)} className="left-align">
                     {this.state.clubs.map(club => <ClubSummary key={club.club._id} club={club} />)}
                 </Collection>
             )
