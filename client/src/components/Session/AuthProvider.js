@@ -40,9 +40,9 @@ class AuthProvider extends Component {
                         .then(res => this.setState({ userInfo: res.data }))
                 } else {
                     // updates the avatar
-                    API.updateUserSettings({_id: res.data._id, avatar: userInfo.avatar})
+                    API.updateUserSettings({ _id: res.data._id, avatar: userInfo.avatar })
                         .then(res => this.setState({ userInfo: res.data }))
-                    
+
                 }
             })
             .catch(err => console.error(err))
@@ -73,11 +73,19 @@ class AuthProvider extends Component {
     }
 
     updateUserInfo = event => {
-        const { name, value } = event.target,
+        const { name, value, id } = event.target,
             userInfo = this.state.userInfo
 
         let isDirty = false
         switch (name) {
+            case 'hostingEnabled':
+                isDirty = true
+                try {
+                    userInfo.clubs.find(club => club.club._id === id).hostingEnabled = event.target.checked
+                } catch (err) {
+                    isDirty = false
+                }
+                break;
             case 'defaultLocation.formattedAddress':
                 //TODO: need to implement Google maps autocomplete here
                 isDirty = true

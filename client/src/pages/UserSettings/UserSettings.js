@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AuthUserContext from '../../components/Session/AuthUserContext'
-import { Row, Input, Preloader } from 'react-materialize'
+import { Row, Input, Preloader, Collection, CollectionItem } from 'react-materialize'
+import './UserSettings.css'
 
 class UserSettings extends Component {
     render() {
@@ -10,11 +11,22 @@ class UserSettings extends Component {
                     {(context) => {
                         return context.userInfo ? (
                             <form>
+                                <h5>User Settings</h5>
                                 <Input name="displayName" onChange={context.updateUserInfo} s={12} label="Display Name" placeholder="John Doe" defaultValue={context.userInfo.displayName} />
                                 <Input name="defaultLocation.formattedAddress" onChange={context.updateUserInfo} s={12} placeholder="123 Main Street" label="Default Hosting Location" defaultValue={context.userInfo.defaultLocation && context.userInfo.defaultLocation.formattedAddress} />
-                                <h5>Hosting Availability</h5>
                                 {context.userInfo && context.userInfo.clubs.length ?
-                                    context.userInfo.clubs.map(club => <Input key={club.club._id} name='hostingEnabled' type='checkbox' label={club.club.name} checked={club.hostingEnabled} />)
+                                    <Collection header="Hosting Availability" className="left-align">
+                                        {context.userInfo.clubs.map(club => (
+                                            <CollectionItem key={club.club._id} className="switch">
+                                                <label>
+                                                    <input name="hostingEnabled" type="checkbox" id={club.club._id} defaultChecked={club.hostingEnabled} onChange={context.updateUserInfo} />
+                                                    <span className="lever"></span>
+                                                    {club.club.name}
+                                                </label>
+                                                <span className="secondary-content">{club.club.frequency}</span>
+                                            </CollectionItem>)
+                                        )}
+                                    </Collection>
                                     :
                                     <span>No clubs</span>
                                 }

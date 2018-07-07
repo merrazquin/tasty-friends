@@ -24,7 +24,7 @@ class Clubs extends Component {
     render() {
         return (
             <Row>
-                <h2>Clubs</h2>
+                <h5>Clubs</h5>
                 <Card>
                     <Button>Create Club</Button>
                 </Card>
