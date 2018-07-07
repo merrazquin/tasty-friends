@@ -28,7 +28,7 @@ class Clubs extends Component {
                 <Card>
                     <Button>Create Club</Button>
                 </Card>
-                <Card>
+                <Card title="Accept Invitation">
                     <Input onChange={this.updateInviteCode} type="text" label="Invitation Code" value={this.state.inviteCode} />
                     <br />
                     <Button onClick={this.joinByInvite}>Join Club</Button>

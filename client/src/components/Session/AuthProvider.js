@@ -37,11 +37,11 @@ class AuthProvider extends Component {
             .then(res => {
                 if (!res.data) {
                     API.createUser(userInfo)
-                        .then(res => this.setState({ userInfo: res.data }))
+                        .then(res => this.setState({ userInfo: this.prepData(res.data) }))
                 } else {
                     // updates the avatar
                     API.updateUserSettings({ _id: res.data._id, avatar: userInfo.avatar })
-                        .then(res => this.setState({ userInfo: res.data }))
+                        .then(res => this.setState({ userInfo: this.prepData(res.data) }))
 
                 }
             })
@@ -104,9 +104,17 @@ class AuthProvider extends Component {
                 .then(result => this.saveToast())
         }
 
-        this.setState({ userInfo: userInfo })
+        this.setState({ userInfo: this.prepData(userInfo) })
     }
 
+    prepData = userInfo => {
+        // Sort clubs
+        if (userInfo.clubs && userInfo.clubs.length) {
+            userInfo.clubs.sort((a, b) => a.club.name > b.club.name)
+        }
+
+        return userInfo
+    }
 
     saveToast = () => {
         if (!this.toastActive) {
