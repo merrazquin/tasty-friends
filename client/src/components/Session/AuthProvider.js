@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import AuthUserContext from './AuthUserContext'
-import API from '../../utils/API.js'
+import API from '../../utils/API'
 
 const LOCAL_STORAGE_KEY = 'authUser'
 
@@ -11,7 +11,9 @@ class AuthProvider extends Component {
         login: response => this.handleFacebookResponse(response),
         logout: event => this.logout(event),
         updateUserInfo: event => this.updateUserInfo(event),
-        replaceUserInfo: userInfo => this.setState({ userInfo: userInfo })
+        replaceUserInfo: userInfo => this.setState({ userInfo: userInfo }),
+        refreshUser: () => this.refreshUser(),
+        saveToast: () => this.saveToast()
     }
 
     toastActive = false
@@ -34,7 +36,7 @@ class AuthProvider extends Component {
     }
 
     authUser = userInfo => {
-        API.getUser(userInfo.authId)
+        API.authUser(userInfo.authId)
             .then(res => {
                 if (!res.data) {
                     API.createUser(userInfo)
@@ -47,6 +49,14 @@ class AuthProvider extends Component {
                 }
             })
             .catch(err => console.error(err))
+    }
+
+    refreshUser = () => {
+        if(!this.state.userInfo) {
+            return;
+        }
+        API.getUser(this.state.userInfo._id)
+            .then(res => this.setState({ userInfo: this.prepData(res.data) }))
     }
 
     handleFacebookResponse = response => {

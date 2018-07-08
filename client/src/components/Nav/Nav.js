@@ -13,8 +13,8 @@ class Nav extends Component {
                     {context.userInfo ?
                         (
                             <ul>
-                                <li className={location.pathname === "/clubs" ? 'active' : ''}><Link to="/clubs"><Icon>group</Icon></Link></li>
-                                <li className={location.pathname === "/events" ? 'active' : ''}><Link to="/events"><Icon>event</Icon></Link></li>
+                                <li className={location.pathname.startsWith('/clubs') ? 'active' : ''}><Link to="/clubs"><Icon>group</Icon></Link></li>
+                                <li className={location.pathname.startsWith('/events') ? 'active' : ''}><Link to="/events"><Icon>event</Icon></Link></li>
                                 <li className={location.pathname === "/settings" ? 'active' : ''}><Link to="/settings"><Icon>settings</Icon></Link></li>
                             </ul>
                         ) : <br />

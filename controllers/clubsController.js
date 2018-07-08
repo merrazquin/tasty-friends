@@ -11,6 +11,9 @@ module.exports = {
     findById: function (req, res) {
         db.Club
             .findById(req.params.id)
+            .populate('owner')
+            .populate('members.member')
+            .populate('events')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
@@ -28,14 +31,22 @@ module.exports = {
     update: function (req, res) {
         db.Club
             .findByIdAndUpdate(req.params.id, req.body, { new: true })
+            .populate('owner')
+            .populate('members.member')
+            .populate('events')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
     remove: function (req, res) {
-        db.Club
-            .findById(req.params.id)
-            .then(dbModel => dbModel.remove())
-            .then(dbModel => res.json(dbModel))
-            .catch(err => res.status(422).json(err));
+        db.User
+            .update({}, { $pull: { clubs: { $elemMatch: {club: req.params.id} } } }, {multi: true})
+            .then(dbModel => {
+                db.Club
+                    .findById(req.params.id)
+                    .then(dbModel => dbModel.remove())
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err));
+            })
+
     }
 }

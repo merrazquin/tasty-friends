@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Row, Input, Card } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
+import { FrequencySelector } from '../../components/Clubs';
 
 class ClubCreation extends Component {
     state = {
@@ -18,14 +20,16 @@ class ClubCreation extends Component {
                     </Row>
                     <Row className="left-align">
                         <h6>Frequency</h6>
-                        <span className="col s12">
+                        <FrequencySelector frequency={this.state.frequency} onChange={this.handleChange} />
+                        {/* <span className="col s12">
                             <input name="frequency" type="radio" value="weekly" id="weekly" className="with-gap" checked={this.state.frequency === "weekly"} onChange={this.handleChange} /> <label htmlFor="weekly">Weekly</label>
                         </span>
                         <span className="col s12">
                             <input name="frequency" type="radio" value="monthly" id="monthly" className="with-gap" checked={this.state.frequency === "monthly"} onChange={this.handleChange} /> <label htmlFor="monthly">Monthly</label>
-                        </span>
+                        </span> */}
                     </Row>
                     <Row>
+                        <Link to="/clubs" className="btn red lighten-1">Cancel</Link>&nbsp;
                         <input type="submit" value="Create" className="btn" />
                     </Row>
                 </Card>
@@ -34,7 +38,6 @@ class ClubCreation extends Component {
     }
     handleChange = event => {
         const { name, value } = event.target
-        console.log(name, value)
         this.setState({ [name]: value })
     }
 

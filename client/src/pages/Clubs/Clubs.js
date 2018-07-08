@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Row, Button, Input, Card, Collection, Icon } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
-import { ClubSummary } from '../../components/ClubSummary/ClubSummary';
+import { ClubSummary } from '../../components/Clubs';
 
 class Clubs extends Component {
     state = {
@@ -25,7 +26,7 @@ class Clubs extends Component {
         return (
             <Row>
                 <Card>
-                    <Button>Create Club</Button>
+                    <Link to="/clubs/create" className="btn">Create Club</Link>
                 </Card>
                 <Card title="Accept Invitation">
                     <Input onChange={this.updateInviteCode} type="text" label="Invitation Code" value={this.state.inviteCode} />

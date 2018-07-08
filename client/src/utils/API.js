@@ -8,8 +8,13 @@ export default {
     },
 
     // Gets the user with the given fb auth id
-    getUser: function (authId) {
+    authUser: function (authId) {
         return axios.get('/api/user/' + authId + '/auth')
+    },
+
+    // Gets the user with the given id
+    getUser: function (id) {
+        return axios.get('/api/user/' + id)
     },
 
     // Update user settings (display name, address, hosting availability)
@@ -25,5 +30,19 @@ export default {
     // Create a new club (club name and frequency)
     createClub: function (clubInfo) {
         return axios.post('/api/club', clubInfo)
+    },
+
+    // Retrieve information abotu a club
+    getClub: function (clubId) {
+        return axios.get('/api/club/' + clubId)
+    },
+
+    // Update Club details
+    updateClub: function (clubInfo) {
+        return axios.put('/api/club/' + clubInfo._id, clubInfo)
+    },
+
+    deleteClub: function(clubId) {
+        return axios.delete('/api/club/' + clubId)
     }
 }
