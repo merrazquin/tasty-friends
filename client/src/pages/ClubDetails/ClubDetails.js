@@ -48,7 +48,7 @@ class ClubDetails extends Component {
                         {/* <ContentEditable tagName="h5" html={club.name} contentEditable="plaintext-only" disabled={!isOw} /> */}
                         <h5>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h5>
 
-                        <h6>Organized by: {club.owner.displayName}</h6>
+                        <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
                         <Container>
                             {this.renderFrequency()}
                             {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}

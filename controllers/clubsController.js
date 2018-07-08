@@ -20,10 +20,10 @@ module.exports = {
     create: function (req, res) {
         db.Club
             .create(req.body)
-            .then(dbModel => {
+            .then(clubModel => {
                 db.User
-                    .findByIdAndUpdate(dbModel.owner, { $push: { clubs: { club: dbModel._id, isOwner: true, hostingEnabled: true } } }, { new: true })
-                    .then(dbModel => res.json(dbModel))
+                    .findByIdAndUpdate(clubModel.owner, { $push: { clubs: { club: clubModel._id, isOwner: true, hostingEnabled: true } } }, { new: true })
+                    .then(userModel => res.json(clubModel))
                     .catch(err => res.status(422).json(err))
             })
             .catch(err => res.status(422).json(err));
@@ -39,7 +39,7 @@ module.exports = {
     },
     remove: function (req, res) {
         db.User
-            .update({}, { $pull: { clubs: { $elemMatch: {club: req.params.id} } } }, {multi: true})
+            .update({}, { $pull: { clubs: { club: req.params.id } } }, { multi: true })
             .then(dbModel => {
                 db.Club
                     .findById(req.params.id)

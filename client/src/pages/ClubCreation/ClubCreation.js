@@ -21,12 +21,6 @@ class ClubCreation extends Component {
                     <Row className="left-align">
                         <h6>Frequency</h6>
                         <FrequencySelector frequency={this.state.frequency} onChange={this.handleChange} />
-                        {/* <span className="col s12">
-                            <input name="frequency" type="radio" value="weekly" id="weekly" className="with-gap" checked={this.state.frequency === "weekly"} onChange={this.handleChange} /> <label htmlFor="weekly">Weekly</label>
-                        </span>
-                        <span className="col s12">
-                            <input name="frequency" type="radio" value="monthly" id="monthly" className="with-gap" checked={this.state.frequency === "monthly"} onChange={this.handleChange} /> <label htmlFor="monthly">Monthly</label>
-                        </span> */}
                     </Row>
                     <Row>
                         <Link to="/clubs" className="btn red lighten-1">Cancel</Link>&nbsp;
@@ -48,10 +42,8 @@ class ClubCreation extends Component {
             clubInfo.owner = this.props.context.userInfo
             API.createClub(clubInfo)
                 .then(res => {
-                    let userInfo = this.props.context.userInfo
-                    userInfo.clubs = res.data
-                    this.props.context.replaceUserInfo(userInfo)
-                    window.location.href = '/clubs'
+                    this.props.context.refreshUser()
+                    window.location.href = '/clubs/' + res.data._id
                 })
                 .catch(err => console.error(err))
         }
