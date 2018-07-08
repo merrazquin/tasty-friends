@@ -1,0 +1,8 @@
+@fontface {
+    font-family: 'Lobster Two', cursive;
+    src: url('https://fonts.googleapis.com/css?family=Lobster+Two');
+}
+
+.brand-logo {
+    font-family: 'Lobster Two', cursive;
+}

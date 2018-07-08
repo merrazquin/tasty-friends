@@ -42,6 +42,7 @@ class ClubCreation extends Component {
         const clubInfo = this.state
         if (clubInfo.name) {
             clubInfo.owner = this.props.context.userInfo
+            clubInfo.members = [{member: this.props.context.userInfo}]
             API.createClub(clubInfo)
                 .then(res => {
                     this.props.context.refreshUser()

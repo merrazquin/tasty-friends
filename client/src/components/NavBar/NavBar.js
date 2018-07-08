@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AuthUserContext from '../Session/AuthUserContext'
 import { Navbar, NavItem } from 'react-materialize'
 import Login from '../../pages/Login'
+import './NavBar.css'
 
 class NavBar extends Component {
     render() {

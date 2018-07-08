@@ -13,7 +13,7 @@ class AuthProvider extends Component {
         updateUserInfo: event => this.updateUserInfo(event),
         replaceUserInfo: userInfo => this.setState({ userInfo: userInfo }),
         refreshUser: () => this.refreshUser(),
-        saveToast: () => this.saveToast()
+        popupToast: (message) => this.popupToast(message)
     }
 
     toastActive = false
@@ -112,7 +112,7 @@ class AuthProvider extends Component {
         if (isDirty) {
             //TODO: bundle calls
             API.updateUserSettings(userInfo)
-                .then(result => this.saveToast())
+                .then(result => this.popupToast())
         }
 
         this.setState({ userInfo: this.prepData(userInfo) })
@@ -127,11 +127,11 @@ class AuthProvider extends Component {
         return userInfo
     }
 
-    saveToast = () => {
+    popupToast = (message = 'Saved!') => {
         if (!this.toastActive) {
             this.toastActive = true
 
-            window.Materialize.toast('Saved!', 2000)
+            window.Materialize.toast(message, 2000)
             clearTimeout(this.toastTimeout)
             this.toastTimeout = setTimeout(() => this.toastActive = false, 2000)
         }

@@ -1,11 +1,35 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { RIEInput } from 'riek'
-import { Row, Preloader, Button, Container } from 'react-materialize'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
+import { Row, Preloader, Button, Container, Collection, Icon, Card } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import './ClubDetails.css'
 import { FrequencySelector } from '../../components/Clubs';
+import CollectionItem from '../../../node_modules/react-materialize/lib/CollectionItem';
+
+const DragHandle = SortableHandle(() => <span className="secondary-content"><Icon>drag_handle</Icon></span>)
+
+const SortableItem = SortableElement(({ member, isOwner }) =>
+    <CollectionItem className="avatar">
+        {/* only owners can change rotation */}
+        {isOwner ? <DragHandle /> : null}
+        <img src={member.member.avatar || "/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
+        <h5>{member.member.displayName}</h5>
+    </CollectionItem>
+);
+
+const SortableList = SortableContainer(({ items, isOwner }) => {
+    return (
+        <Collection header={<div><span>Hosting Rotation</span><span className="secondary-content"><Icon>person_add</Icon></span></div>} className="left-align">
+            {items.map((value, index) => (
+                <SortableItem key={`item-${index}`} index={index} member={value} isOwner={isOwner} />
+            ))}
+        </Collection>
+    );
+});
 
 class ClubDetails extends Component {
     state = {
@@ -20,13 +44,22 @@ class ClubDetails extends Component {
         const { isOwner, club } = this.state
 
         return (<Row className="left-align">
-            <h4>Frequency</h4>
             {isOwner ?
                 <FrequencySelector frequency={club.frequency} onChange={this.handleFrequencyChange} />
                 :
                 <span>{club.frequency}</span>
             }
         </Row>)
+    }
+
+    updateOrder = ({ oldIndex, newIndex }) => {
+        const club = this.state.club
+        club.members = arrayMove(this.state.club.members, oldIndex, newIndex)
+        // premtively setting state for smoothness
+        this.setState({ club: club })
+        API.updateClub(club)
+            .then(res => this.setState({ club: club }))
+
     }
 
     componentDidMount() {
@@ -41,18 +74,27 @@ class ClubDetails extends Component {
         }
     }
 
-    render() {
+    render = () => {
         const { club, isOwner } = this.state
         return (
             club ?
                 (
                     <div>
                         {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
-                        <h5>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h5>
+                        <h4>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
 
                         <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
+                        {/* <h5>Invitation Code</h5>
+                        <CopyToClipboard text={club.inviteCode} onCopy={() => this.props.context.popupToast('Copied!')}>
+                            <Button>{club.inviteCode}</Button>
+                        </CopyToClipboard> */}
                         <Container>
+                            <Card title="Frequency">
                             {this.renderFrequency()}
+                            </Card>
+
+                            <SortableList items={club.members} useDragHandle={true} onSortEnd={this.updateOrder} isOwner={this.state.isOwner} />
+
                             {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}
                         </Container>
                     </div>
@@ -77,7 +119,7 @@ class ClubDetails extends Component {
             .then(result => {
                 this.setState({ club: result.data })
                 this.props.context.refreshUser()
-                this.props.context.saveToast()
+                this.props.context.popupToast()
             })
             .catch(err => console.log(err))
     }
@@ -91,7 +133,7 @@ class ClubDetails extends Component {
             .then(result => {
                 this.setState({ club: result.data })
                 this.props.context.refreshUser()
-                this.props.context.saveToast()
+                this.props.context.popupToast()
             })
             .catch(err => console.log(err))
     }

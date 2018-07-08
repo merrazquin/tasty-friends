@@ -5,11 +5,14 @@
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "react": "^16.4.1",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.4.1",
     "react-facebook-login": "^4.0.1",
     "react-materialize": "^2.3.3",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "react-sortable-hoc": "^0.8.3",
+    "riek": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -17,7 +20,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "devDependencies": {
-    "riek": "^1.1.0"
-  }
+  "devDependencies": {}
 }
