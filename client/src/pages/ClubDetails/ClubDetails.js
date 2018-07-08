@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { Row, Preloader, Button, Container } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -9,7 +10,8 @@ import { FrequencySelector } from '../../components/Clubs';
 class ClubDetails extends Component {
     state = {
         club: null,
-        isOwner: false
+        isOwner: false,
+        redirect: false
     }
 
     getClubDetails = () => API.getClub(this.props.match.params.id).then(result => this.setState({ club: result.data, isOwner: this.props.context.userInfo._id === result.data.owner._id })).catch(err => console.error(err))
@@ -45,7 +47,7 @@ class ClubDetails extends Component {
             club ?
                 (
                     <div>
-                        {/* <ContentEditable tagName="h5" html={club.name} contentEditable="plaintext-only" disabled={!isOw} /> */}
+                        {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                         <h5>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h5>
 
                         <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
@@ -61,7 +63,10 @@ class ClubDetails extends Component {
 
     deleteClub = () => {
         API.deleteClub(this.state.club._id)
-            .then(res => { window.location = '/clubs' })
+            .then(res => {
+                this.props.context.refreshUser()
+                this.setState({ redirect: '/clubs' })
+            })
             .catch(err => console.log(err))
     }
 

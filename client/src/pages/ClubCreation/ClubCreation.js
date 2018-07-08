@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { Row, Input, Card } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
@@ -8,12 +8,14 @@ import { FrequencySelector } from '../../components/Clubs';
 class ClubCreation extends Component {
     state = {
         name: '',
-        frequency: 'monthly'
+        frequency: 'monthly',
+        redirect: false
     }
 
     render() {
         return (
             <form onSubmit={this.createClub}>
+                {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                 <Card title="Create Club">
                     <Row>
                         <Input type="text" name="name" label="Club Name" defaultValue={this.state.name} onChange={this.handleChange} s={12} required />
@@ -43,7 +45,7 @@ class ClubCreation extends Component {
             API.createClub(clubInfo)
                 .then(res => {
                     this.props.context.refreshUser()
-                    window.location.href = '/clubs/' + res.data._id
+                    this.setState({ redirect: '/clubs/' + res.data._id })
                 })
                 .catch(err => console.error(err))
         }
