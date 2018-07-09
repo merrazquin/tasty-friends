@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
 import { Row, Preloader, Button, Container, Collection, Icon, Card } from 'react-materialize'
@@ -20,9 +20,9 @@ const SortableItem = SortableElement(({ member, isOwner }) =>
     </CollectionItem>
 );
 
-const SortableList = SortableContainer(({ items, isOwner }) => {
+const SortableList = SortableContainer(({ items, id, isOwner }) => {
     return (
-        <Collection header={<div><span>Hosting Rotation</span><span className="secondary-content"><Icon>person_add</Icon></span></div>} className="left-align">
+        <Collection header={<div><span>Hosting Rotation</span><Link to={id + '/invite'} className="secondary-content"><Icon>person_add</Icon></Link></div>} className="left-align">
             {items.map((value, index) => (
                 <SortableItem key={`item-${index}`} index={index} member={value} isOwner={isOwner} />
             ))}
@@ -78,21 +78,20 @@ class ClubDetails extends Component {
         return (
             club ?
                 (
-                    <div>
+                    <Container>
                         {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                         <h4>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
 
                         <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
-                        <Container>
-                            <Card title="Frequency">
+
+                        <Card title="Frequency">
                             {this.renderFrequency()}
-                            </Card>
+                        </Card>
 
-                            <SortableList items={club.members} useDragHandle={true} onSortEnd={this.updateOrder} isOwner={this.state.isOwner} />
+                        <SortableList items={club.members} useDragHandle={true} onSortEnd={this.updateOrder} isOwner={this.state.isOwner} id={club._id} />
 
-                            {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}
-                        </Container>
-                    </div>
+                        {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}
+                    </Container>
                 )
                 : <Preloader />
         )

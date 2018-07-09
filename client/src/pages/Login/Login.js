@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import FacebookLogin from 'react-facebook-login'
-import { Row, Preloader, Button, Col } from 'react-materialize'
+import { Preloader, Button, Container } from 'react-materialize'
 import './Login.css'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 
@@ -16,39 +16,39 @@ class Login extends Component {
                     (context) => {
                         return context.userInfo ?
                             (
-                                <Row>
-                                    <Col s={12}>
-                                        <h1>Hi, {context.userInfo.displayName}</h1>
-                                        <img alt={context.userInfo.displayName + "'s avatar"} className="circle" src={context.userInfo.avatar || "/default-avatar.png"} />
-                                        <p>
-                                            <Button onClick={context.logout}>Log out</Button>
-                                        </p>
-                                    </Col>
-                                </Row>
+                                <Container>
+                                    <h1>Hi, {context.userInfo.displayName}</h1>
+                                    <img alt={context.userInfo.displayName + "'s avatar"} className="circle" src={context.userInfo.avatar || "/default-avatar.png"} />
+                                    <p>
+                                        <Button onClick={context.logout}>Log out</Button>
+                                    </p>
+                                </Container>
                             )
                             :
                             (
-                                <div className="valign-wrapper">
-                                    <div className="center-align">
-                                        {(context.loggedOut || !this.props.location.search.startsWith('?code')) ?
-                                            <div>
-                                                <h3>Welcome to<br/>Tasty Friends</h3>
-                                                <p>Please login with your Facebook account to get started.</p>
-                                            </div>
-                                            :
-                                            null
-                                        }
-                                        <br />
-                                        <FacebookLogin cssClass={(context.loggedOut || !this.props.location.search.startsWith('?code')) ? 'kep-login-facebook' : 'hidden'} icon="fa-facebook" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} fields="name,email,picture" scope="public_profile,user_friends" callback={context.login} />
-                                        {!(context.loggedOut || !this.props.location.search.startsWith('?code')) ?
-                                            <div>
-                                                <h3>Logging in...</h3>
-                                                <Preloader />
-                                            </div>
-                                            :
-                                            null}
+                                <Container>
+                                    <div className="valign-wrapper">
+                                        <div className="center-align">
+                                            {(context.loggedOut || !this.props.location.search.startsWith('?code')) ?
+                                                <div>
+                                                    <h3>Welcome to<br />Tasty Friends</h3>
+                                                    <p>Please login with your Facebook account to get started.</p>
+                                                </div>
+                                                :
+                                                null
+                                            }
+                                            <br />
+                                            <FacebookLogin cssClass={(context.loggedOut || !this.props.location.search.startsWith('?code')) ? 'kep-login-facebook' : 'hidden'} icon="fa-facebook" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} fields="name,email,picture" scope="public_profile,user_friends" callback={context.login} />
+                                            {!(context.loggedOut || !this.props.location.search.startsWith('?code')) ?
+                                                <div>
+                                                    <h3>Logging in...</h3>
+                                                    <Preloader />
+                                                </div>
+                                                :
+                                                null}
+                                        </div>
                                     </div>
-                                </div>
+                                </Container>
                             )
                     }
                 }

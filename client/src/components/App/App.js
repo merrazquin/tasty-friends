@@ -8,6 +8,7 @@ import UserSettings from '../../pages/UserSettings'
 import Clubs from '../../pages/Clubs'
 import ClubDetails from '../../pages/ClubDetails'
 import ClubCreation from '../../pages/ClubCreation'
+import AddClubMembers from '../../pages/AddClubMembers'
 import './App.css'
 
 class App extends Component {
@@ -25,6 +26,7 @@ class App extends Component {
                                 <Route exact path="/clubs" component={Clubs} />
                                 <Route exact path="/clubs/create" component={ClubCreation} />
                                 <Route exact path="/clubs/:id" component={ClubDetails} />
+                                <Route exact path="/clubs/:id/invite" component={AddClubMembers} />
                             </Switch>
 
                         </div>

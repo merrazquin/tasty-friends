@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AuthUserContext from './AuthUserContext'
 import API from '../../utils/API'
 
+
 const LOCAL_STORAGE_KEY = 'authUser'
 
 class AuthProvider extends Component {
@@ -80,7 +81,6 @@ class AuthProvider extends Component {
 
     logout = event => {
         localStorage.removeItem(LOCAL_STORAGE_KEY)
-        // this.setState({ userInfo: null, loggedOut: true })
         window.location = "/"
     }
 

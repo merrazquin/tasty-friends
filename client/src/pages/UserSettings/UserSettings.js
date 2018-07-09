@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import AuthUserContext from '../../components/Session/AuthUserContext'
-import { Row, Input, Preloader, Collection, CollectionItem } from 'react-materialize'
+import { Input, Preloader, Collection, CollectionItem, Container } from 'react-materialize'
 import './UserSettings.css'
 
 class UserSettings extends Component {
     render() {
         return (
-            <Row>
+            <Container>
                 <AuthUserContext.Consumer>
                     {(context) => {
                         return context.userInfo ? (
@@ -36,7 +36,7 @@ class UserSettings extends Component {
                     }
                     }
                 </AuthUserContext.Consumer>
-            </Row>
+            </Container>
 
 
         )

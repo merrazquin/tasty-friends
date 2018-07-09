@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Row, Button, Input, Card, Collection, Icon } from 'react-materialize'
+import { Container, Button, Input, Card, Collection, Icon } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import { ClubSummary } from '../../components/Clubs';
@@ -24,7 +24,7 @@ class Clubs extends Component {
 
     render() {
         return (
-            <Row>
+            <Container>
                 <Card>
                     <Link to="/clubs/create" className="btn">Create Club</Link>
                 </Card>
@@ -35,7 +35,7 @@ class Clubs extends Component {
                 </Card>
                 {this.generateClubsList()}
 
-            </Row>
+            </Container>
         )
     }
 
