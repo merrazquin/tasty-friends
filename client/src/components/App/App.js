@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import AuthUserContext from '../Session/AuthUserContext'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import AuthProvider from '../Session/AuthProvider'
 import Nav from '../Nav'
 import NavBar from '../NavBar'
@@ -20,13 +19,6 @@ class App extends Component {
                     <div className="App">
                         <NavBar/>
                         <div className="Site-content">
-                            <AuthUserContext.Consumer>
-                                {(context) => context.loggedOut ?
-                                    <Redirect to="/" />
-                                    :
-                                    ''
-                                }
-                            </AuthUserContext.Consumer>
                             <Switch>
                                 <Route exact path="/" component={Login} />
                                 <Route exact path="/settings" component={UserSettings} />

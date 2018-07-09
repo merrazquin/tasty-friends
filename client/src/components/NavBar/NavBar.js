@@ -9,7 +9,7 @@ class NavBar extends Component {
         return (
             <Navbar brand="Tasty Friends" right options={{ closeOnClick: true }}>
                 <AuthUserContext.Consumer>
-                    {context => context.userInfo ? <NavItem onClick={context.logout}>Logout</NavItem> : <Login/>}
+                    {context => context.userInfo ? <NavItem onClick={context.logout}>Logout</NavItem> : <Login />}
                 </AuthUserContext.Consumer>
             </Navbar>
         )

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import { RIEInput } from 'riek'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
 import { Row, Preloader, Button, Container, Collection, Icon, Card } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -84,10 +83,6 @@ class ClubDetails extends Component {
                         <h4>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
 
                         <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
-                        {/* <h5>Invitation Code</h5>
-                        <CopyToClipboard text={club.inviteCode} onCopy={() => this.props.context.popupToast('Copied!')}>
-                            <Button>{club.inviteCode}</Button>
-                        </CopyToClipboard> */}
                         <Container>
                             <Card title="Frequency">
                             {this.renderFrequency()}

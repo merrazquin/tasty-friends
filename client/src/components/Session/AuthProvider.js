@@ -80,7 +80,8 @@ class AuthProvider extends Component {
 
     logout = event => {
         localStorage.removeItem(LOCAL_STORAGE_KEY)
-        this.setState({ userInfo: null, loggedOut: true })
+        // this.setState({ userInfo: null, loggedOut: true })
+        window.location = "/"
     }
 
     updateUserInfo = event => {
