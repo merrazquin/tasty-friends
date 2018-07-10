@@ -53,7 +53,7 @@ class AuthProvider extends Component {
     }
 
     refreshUser = () => {
-        if(!this.state.userInfo) {
+        if (!this.state.userInfo) {
             return;
         }
         API.getUser(this.state.userInfo._id)
@@ -81,7 +81,7 @@ class AuthProvider extends Component {
 
     logout = event => {
         localStorage.removeItem(LOCAL_STORAGE_KEY)
-        window.location = "/"
+        this.setState({ userInfo: null, loggedOut: true, redirect: '/' })
     }
 
     updateUserInfo = event => {
@@ -92,8 +92,12 @@ class AuthProvider extends Component {
         switch (name) {
             case 'hostingEnabled':
                 isDirty = true
+                let hostingEnabled = event.target.checked
                 try {
-                    userInfo.clubs.find(club => club.club._id === id).hostingEnabled = event.target.checked
+                    userInfo.clubs.find(club => club.club._id === id).hostingEnabled = hostingEnabled
+                    API.updateHostingStatus(id, userInfo._id, hostingEnabled)
+                        .then(res => console.log(res))
+                        .catch(err => console.error(err))
                 } catch (err) {
                     isDirty = false
                 }

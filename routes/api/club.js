@@ -12,4 +12,8 @@ router.route('/:id')
     .put(clubsController.update)
     .delete(clubsController.remove)
 
+router.route('/:id/updateHosting')
+    .put(clubsController.updateHosting)
+
+
 module.exports = router

@@ -2,29 +2,28 @@ import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
-import { Row, Preloader, Button, Container, Collection, Icon, Card } from 'react-materialize'
+import { Row, Preloader, Button, Container, Collection, Icon, Card, CollectionItem } from 'react-materialize'
+import { FrequencySelector } from '../../components/Clubs';
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import './ClubDetails.css'
-import { FrequencySelector } from '../../components/Clubs';
-import CollectionItem from '../../../node_modules/react-materialize/lib/CollectionItem';
 
 const DragHandle = SortableHandle(() => <span className="secondary-content"><Icon>drag_handle</Icon></span>)
 
-const SortableItem = SortableElement(({ member, isOwner }) =>
+const Host = SortableElement(({ member, draggable }) =>
     <CollectionItem className="avatar">
         {/* only owners can change rotation */}
-        {isOwner ? <DragHandle /> : null}
+        {draggable ? <DragHandle /> : null}
         <img src={member.member.avatar || "/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
         <h5>{member.member.displayName}</h5>
     </CollectionItem>
 );
 
-const SortableList = SortableContainer(({ items, id, isOwner }) => {
+const HostingRotation = SortableContainer(({ members, id, isOwner }) => {
     return (
         <Collection header={<div><span>Hosting Rotation</span><Link to={id + '/invite'} className="secondary-content"><Icon>person_add</Icon></Link></div>} className="left-align">
-            {items.map((value, index) => (
-                <SortableItem key={`item-${index}`} index={index} member={value} isOwner={isOwner} />
+            {members.map((member, index) => (
+                <Host key={`draggableMember-${index}`} index={index} member={member} draggable={isOwner} />
             ))}
         </Collection>
     );
@@ -74,7 +73,10 @@ class ClubDetails extends Component {
     }
 
     render = () => {
-        const { club, isOwner } = this.state
+        const { club, isOwner } = this.state,
+            hostingMembers = club && club.members.filter(member => member.willHost),
+            nonHostingMembers = club && club.members.filter(member => !member.willHost)
+
         return (
             club ?
                 (
@@ -88,7 +90,20 @@ class ClubDetails extends Component {
                             {this.renderFrequency()}
                         </Card>
 
-                        <SortableList items={club.members} useDragHandle={true} onSortEnd={this.updateOrder} isOwner={this.state.isOwner} id={club._id} />
+                        <HostingRotation useDragHandle={true} onSortEnd={this.updateOrder} members={hostingMembers} isOwner={this.state.isOwner} id={club._id} />
+
+                        {nonHostingMembers.length ?
+                            <Collection header={<span>Non-hosting Members</span>} className="left-align">
+                                {nonHostingMembers.map((member, index) => (
+                                    <CollectionItem key={`nonDraggableMember-${index}`} className="avatar">
+                                        <img src={member.member.avatar || "/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
+                                        <h5>{member.member.displayName}</h5>
+                                    </CollectionItem>
+                                ))}
+                            </Collection>
+                            : null
+                        }
+
 
                         {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}
                     </Container>

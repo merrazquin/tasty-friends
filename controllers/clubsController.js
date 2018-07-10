@@ -37,6 +37,12 @@ module.exports = {
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
+    updateHosting: function (req, res) {
+        db.Club
+            .findOneAndUpdate({ _id: req.params.id, 'members.member': req.body.userId }, { $set: { 'members.$.willHost': req.body.hostingEnabled } }, { new: true })
+            .then(dbModel => res.json(dbModel))
+            .catch(err => res.status(422).json(err))
+    },
     remove: function (req, res) {
         db.User
             .update({}, { $pull: { clubs: { club: req.params.id } } }, { multi: true })

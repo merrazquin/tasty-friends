@@ -1,7 +1,12 @@
 import axios from 'axios'
 
 export default {
-
+    testFB: function (callback) {
+        if (!window.FB) return callback(false)
+        window.FB.api('/me/friends', 'get', (response) => {
+            callback(response)
+        })
+    },
     // Create a user
     createUser: function (userInfo) {
         return axios.post('/api/user', userInfo)
@@ -42,7 +47,11 @@ export default {
         return axios.put('/api/club/' + clubInfo._id, clubInfo)
     },
 
-    deleteClub: function(clubId) {
+    updateHostingStatus(clubId, userId, hostingEnabled) {
+        return axios.put('/api/club/' + clubId + '/updateHosting', { userId: userId, hostingEnabled: hostingEnabled })
+    },
+
+    deleteClub: function (clubId) {
         return axios.delete('/api/club/' + clubId)
     }
 }

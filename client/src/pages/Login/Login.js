@@ -38,7 +38,7 @@ class Login extends Component {
                                                 null
                                             }
                                             <br />
-                                            <FacebookLogin cssClass={(context.loggedOut || !this.props.location.search.startsWith('?code')) ? 'kep-login-facebook' : 'hidden'} icon="fa-facebook" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} fields="name,email,picture" scope="public_profile,user_friends" callback={context.login} />
+                                            <FacebookLogin cssClass={(context.loggedOut || !this.props.location.search.startsWith('?code')) ? 'kep-login-facebook' : 'hidden'} icon="fa-facebook" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} fields="name,email,picture" scope="public_profile,user_friends" callback={context.login} version="3.0" />
                                             {!(context.loggedOut || !this.props.location.search.startsWith('?code')) ?
                                                 <div>
                                                     <h3>Logging in...</h3>
