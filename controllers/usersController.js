@@ -64,15 +64,15 @@ module.exports = {
     },
     joinClubByInvite: function (req, res) {
         db.Club
-            .findOneAndUpdate({ inviteCode: req.params.inviteCode, owner: { $not: req.params.id }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
+            .findOneAndUpdate({ inviteCode: req.params.inviteCode, owner: { $not: { $eq: req.params.id } }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
             .then(dbModel => {
                 db.User
                     .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
                     .populate('clubs.club')
                     .then(dbModel => res.json(dbModel))
-                    .catch(err => res.status(422).json({err: err, msg: 'user not found'}))
+                    .catch(err => res.status(422).json(dbModel))
             })
-            .catch(err => res.status(422).json({err: err, msg: 'db not found'}))
+            .catch(err => res.status(422).json(dbModel))
     },
     leaveClub: function (req, res) {
         db.Club
