@@ -53,7 +53,7 @@ class Clubs extends Component {
 
     updateInviteCode = event => {
         const { value } = event.target
-        this.setState({ inviteCode: value })
+        this.setState({ inviteCode: value.toUpperCase() })
     }
 
     joinByInvite = event => {

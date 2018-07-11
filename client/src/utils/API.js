@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 export default {
-    testFB: function (callback) {
+    getFacebookFriends: function (callback) {
         if (!window.FB) return callback(false)
-        window.FB.api('/me/friends', 'get', (response) => {
+        window.FB.api('/me/friends?fields=name,picture', 'get', (response) => {
             callback(response)
         })
     },
