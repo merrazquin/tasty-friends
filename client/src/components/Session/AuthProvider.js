@@ -6,19 +6,23 @@ import API from '../../utils/API'
 const LOCAL_STORAGE_KEY = 'authUser'
 
 class AuthProvider extends Component {
-    state = {
-        userInfo: null,
-        loggedOut: false,
-        login: response => this.handleFacebookResponse(response),
-        logout: event => this.logout(event),
-        updateUserInfo: event => this.updateUserInfo(event),
-        replaceUserInfo: userInfo => this.setState({ userInfo: userInfo }),
-        refreshUser: () => this.refreshUser(),
-        popupToast: (message) => this.popupToast(message)
-    }
+    constructor() {
+        super()
+        this.state = {
+            userInfo: null,
+            loggedOut: false,
+            login: response => this.handleFacebookResponse(response),
+            logout: event => this.logout(event),
+            updateUserInfo: event => this.updateUserInfo(event),
+            replaceUserInfo: userInfo => this.setState({ userInfo: userInfo }),
+            refreshUser: () => this.refreshUser(),
+            popupToast: (message) => this.popupToast(message)
+        }
 
-    toastActive = false
-    toastTimeout = null
+        this.toastActive = false
+        this.toastTimeout = null
+        this.saveTimeout = null
+    }
 
     componentDidMount() {
         // check local storage for logged in info
@@ -88,9 +92,12 @@ class AuthProvider extends Component {
         const { name, value, id } = event.target,
             userInfo = this.state.userInfo
 
-        let isDirty = false
+        let isDirty = false,
+            immediateSave = false
+
         switch (name) {
             case 'hostingEnabled':
+                immediateSave = true
                 isDirty = true
                 let hostingEnabled = event.target.checked
                 try {
@@ -115,9 +122,12 @@ class AuthProvider extends Component {
                 userInfo[name] = value
         }
         if (isDirty) {
-            //TODO: bundle calls
-            API.updateUserSettings(userInfo)
-                .then(result => this.popupToast())
+            // bundle calls so as not to flood
+            clearTimeout(this.saveTimeout)
+            this.saveTimeout = setTimeout(() =>
+                API.updateUserSettings(userInfo)
+                    .then(result => this.popupToast())
+                , immediateSave ? 0 : 1000)
         }
 
         this.setState({ userInfo: this.prepData(userInfo) })
@@ -133,6 +143,14 @@ class AuthProvider extends Component {
     }
 
     popupToast = (message = 'Saved!') => {
+        if (this.toastActive) {
+            const toast = document.querySelector('#toast-container>.toast')
+            if (toast) {
+                this.toastActive = false
+                clearTimeout(this.toastTimeout)
+                toast.remove()
+            }
+        }
         if (!this.toastActive) {
             this.toastActive = true
 
