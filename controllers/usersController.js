@@ -9,6 +9,14 @@ module.exports = {
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
+    findFBFriends: function (req, res) {
+        db.User
+            .find({ authId: { $in: req.body.fbIDs } })
+            .populate('clubs.club')
+            .sort({ displayName: 1 })
+            .then(dbModel => res.json(dbModel))
+            .catch(err => res.status(422).json(err))
+    },
     findById: function (req, res) {
         db.User
             .findById(req.params.id)
@@ -52,7 +60,7 @@ module.exports = {
     },
     joinClub: function (req, res) {
         db.Club
-            .findOneAndUpdate({ _id: req.params.club, owner: { $not: req.params.id }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
+            .findOneAndUpdate({ _id: req.params.club, owner: { $not: {$eq: req.params.id } }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
             .then(dbModel => {
                 db.User
                     .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })

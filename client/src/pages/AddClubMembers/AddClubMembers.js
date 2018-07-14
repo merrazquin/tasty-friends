@@ -13,7 +13,13 @@ class AddClubMembers extends Component {
     }
 
     getClubDetails = () => API.getClub(this.props.match.params.id).then(result => this.setState({ club: result.data, isOwner: this.props.context.userInfo._id === result.data.owner._id })).catch(err => console.error(err))
-    getFriendsList = () => API.getFacebookFriends(response => this.setState({ friends: response.data }))
+    getFriendsList = () => API.getFacebookFriends(this.props.context.userInfo._id, response => this.setState({ friends: response.data }))
+
+    addMemberToClub(userId) {
+        API.joinClub(userId, this.state.club._id)
+            .then(club => this.getClubDetails())
+            .catch(err => console.error(err))
+    }
 
     componentDidMount() {
         if (this.props.context.userInfo) {
@@ -25,6 +31,8 @@ class AddClubMembers extends Component {
     componentWillReceiveProps(nextProps) {
         if (!this.state.club) {
             this.getClubDetails()
+        }
+        if (this.props.context.userInfo) {
             this.getFriendsList()
         }
     }
@@ -44,12 +52,17 @@ class AddClubMembers extends Component {
                             </CopyToClipboard>
                         </Card>
 
-                        <Collection header={<h5>Select friends</h5>} className="left-align avatar">
+                        <Collection header={<h5>Select friends</h5>} className="left-align">
                             {friends && friends.map(friend => (
-                                <CollectionItem key={friend.id}>
-                                    <img src={friend.picture.data.url || "/default-avatar.png"} alt={friend.name + "'s avatar"} className="circle" />
-                                    <h5>{friend.name}</h5>
-                                    <span className="secondary-content"><Icon>add</Icon></span>
+                                <CollectionItem key={friend._id} className="avatar">
+                                    <img src={friend.avatar || "/default-avatar.png"} alt={friend.displayName + "'s avatar"} className="circle" />
+                                    <h5>{friend.displayName}</h5>
+                                    {
+                                        club.members.find(member => member.member._id === friend._id) ?
+                                            <span className="secondary-content disabled"><Icon>check</Icon></span>
+                                            :
+                                            <span className="secondary-content" onClick={() => this.addMemberToClub(friend._id)}><Icon>add</Icon></span>
+                                    }
                                 </CollectionItem>
                             ))}
                         </Collection>

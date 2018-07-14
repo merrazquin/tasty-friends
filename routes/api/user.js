@@ -13,6 +13,9 @@ router.route('/:id')
     .put(usersController.update)
     .delete(usersController.remove)
 
+router.route('/:id/fb')
+    .post(usersController.findFBFriends)
+
 router.route('/:id/auth')
     .get(usersController.findByAuthId)
 

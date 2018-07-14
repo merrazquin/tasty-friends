@@ -24,7 +24,7 @@ class App extends Component {
                             {(context) => context.loggedOut ?
                                 <Redirect to="/" />
                                 :
-                                ''
+                                null
                             }
                         </AuthUserContext.Consumer>
                         <NavBar />

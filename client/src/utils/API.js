@@ -1,10 +1,12 @@
 import axios from 'axios'
 
 export default {
-    getFacebookFriends: function (callback) {
+    getFacebookFriends: function (id, callback) {
         if (!window.FB) return callback(false)
+
         window.FB.api('/me/friends?fields=name,picture', 'get', (response) => {
-            callback(response)
+            axios.post('/api/user/' + id + '/fb', { fbIDs: response.data.map(friend => friend.id) })
+                .then(response => callback(response))
         })
     },
     // Create a user
@@ -42,11 +44,17 @@ export default {
         return axios.get('/api/club/' + clubId)
     },
 
+    // Add a user to a club
+    joinClub: function (userId, clubId) {
+        return axios.put('/api/user/' + userId + '/club/' + clubId)
+    },
+
     // Update Club details
     updateClub: function (clubInfo) {
         return axios.put('/api/club/' + clubInfo._id, clubInfo)
     },
 
+    // Update a club member's hosting availability 
     updateHostingStatus(clubId, userId, hostingEnabled) {
         return axios.put('/api/club/' + clubId + '/updateHosting', { userId: userId, hostingEnabled: hostingEnabled })
     },
