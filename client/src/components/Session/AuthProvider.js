@@ -14,7 +14,7 @@ class AuthProvider extends Component {
             login: response => this.handleFacebookResponse(response),
             logout: event => this.logout(event),
             updateUserInfo: event => this.updateUserInfo(event),
-            replaceUserInfo: userInfo => this.setState({ userInfo: userInfo }),
+            updateUserAddress: addressInfo => this.updateUserAddress(addressInfo), //userInfo => this.setState({ userInfo: userInfo }),
             refreshUser: () => this.refreshUser(),
             popupToast: (message) => this.popupToast(message)
         }
@@ -103,19 +103,10 @@ class AuthProvider extends Component {
                 try {
                     userInfo.clubs.find(club => club.club._id === id).hostingEnabled = hostingEnabled
                     API.updateHostingStatus(id, userInfo._id, hostingEnabled)
-                        .then(res => console.log(res))
                         .catch(err => console.error(err))
                 } catch (err) {
                     isDirty = false
                 }
-                break;
-            case 'defaultLocation.formattedAddress':
-                //TODO: need to implement Google maps autocomplete here
-                isDirty = true
-                if (!userInfo.defaultLocation) {
-                    userInfo.defaultLocation = {}
-                }
-                userInfo.defaultLocation.formattedAddress = value
                 break;
             default:
                 isDirty = true
@@ -131,6 +122,23 @@ class AuthProvider extends Component {
         }
 
         this.setState({ userInfo: this.prepData(userInfo) })
+    }
+
+    updateUserAddress = addressInfo => {
+        const userInfo = this.state.userInfo
+        if (!userInfo.defaultLocation) {
+            userInfo.defaultLocation = {}
+        }
+
+        userInfo.defaultLocation.formattedAddress = addressInfo.address
+        userInfo.defaultLocation.lat = addressInfo.latitude
+        userInfo.defaultLocation.lng = addressInfo.longitude
+
+        clearTimeout(this.saveTimeout)
+        this.saveTimeout = setTimeout(() =>
+            API.updateUserSettings(userInfo)
+                .then(result => this.popupToast())
+            , 1000)
     }
 
     prepData = userInfo => {

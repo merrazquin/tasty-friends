@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import { Input, Preloader, Collection, CollectionItem, Container } from 'react-materialize'
+import SearchBar from '../../components/SearchBar'
 import './UserSettings.css'
 
 class UserSettings extends Component {
@@ -13,7 +14,7 @@ class UserSettings extends Component {
                             <form>
                                 <h5>User Settings</h5>
                                 <Input name="displayName" onChange={context.updateUserInfo} s={12} label="Display Name" placeholder="John Doe" defaultValue={context.userInfo.displayName} />
-                                <Input name="defaultLocation.formattedAddress" onChange={context.updateUserInfo} s={12} placeholder="123 Main Street" label="Default Hosting Location" defaultValue={context.userInfo.defaultLocation && context.userInfo.defaultLocation.formattedAddress} />
+                                <SearchBar onChange={context.updateUserAddress} address={context.userInfo.defaultLocation && context.userInfo.defaultLocation.formattedAddress} />
                                 {context.userInfo && context.userInfo.clubs.length ?
                                     <Collection header="Hosting Availability" className="left-align">
                                         {context.userInfo.clubs.map(club => (
