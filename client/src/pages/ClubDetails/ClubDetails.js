@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
-import { Row, Preloader, Button, Container, Collection, Icon, Card, CollectionItem } from 'react-materialize'
+import { Row, Preloader, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
 import { FrequencySelector } from '../../components/Clubs';
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
@@ -105,7 +105,16 @@ class ClubDetails extends Component {
                         }
 
 
-                        {isOwner ? <Button className="red lighten-1" onClick={this.deleteClub}>Delete Club</Button> : null}
+                        {isOwner ?
+                            <Modal header="Delete Club?" trigger={<Button className="red lighten-1">Delete Club</Button>}
+                            actions={<span>
+                                 <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
+                                 <Button className="modal-close">Cancel</Button>
+                            </span>}>
+                                <p>Are you sure you want to delete "{club.name}"?</p>
+                            </Modal>
+
+                            : null}
                     </Container>
                 )
                 : <Preloader />

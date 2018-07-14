@@ -124,6 +124,7 @@ class SearchBar extends Component {
                                         <div className="dropdown-footer">
                                             <div>
                                                 <img
+                                                    alt="Powered by Google"
                                                     src={require('../images/powered_by_google_default.png')}
                                                     className="dropdown-footer-image"
                                                 />
