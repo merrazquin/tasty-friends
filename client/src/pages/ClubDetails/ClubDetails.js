@@ -50,6 +50,11 @@ class ClubDetails extends Component {
         </Row>)
     }
 
+    // Add the dragged item to a styled container so it can inherit the correct styles
+    sortStart = () => {
+        document.getElementById('sortingContainer').appendChild(document.querySelector('.sorting'))
+    }
+
     updateOrder = ({ oldIndex, newIndex }) => {
         const club = this.state.club
         club.members = arrayMove(this.state.club.members, oldIndex, newIndex)
@@ -90,7 +95,7 @@ class ClubDetails extends Component {
                             {this.renderFrequency()}
                         </Card>
 
-                        <HostingRotation useDragHandle={true} onSortEnd={this.updateOrder} members={hostingMembers} isOwner={this.state.isOwner} id={club._id} />
+                        <HostingRotation useDragHandle={true} helperClass="sorting" onSortStart={this.sortStart} onSortEnd={this.updateOrder} members={hostingMembers} isOwner={this.state.isOwner} id={club._id} />
 
                         {nonHostingMembers.length ?
                             <Collection header={<span>Non-hosting Members</span>} className="left-align">
@@ -107,14 +112,17 @@ class ClubDetails extends Component {
 
                         {isOwner ?
                             <Modal header="Delete Club?" trigger={<Button className="red lighten-1">Delete Club</Button>}
-                            actions={<span>
-                                 <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
-                                 <Button className="modal-close">Cancel</Button>
-                            </span>}>
+                                actions={<span>
+                                    <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
+                                    <Button className="modal-close">Cancel</Button>
+                                </span>}>
                                 <p>Are you sure you want to delete "{club.name}"?</p>
                             </Modal>
 
                             : null}
+
+                        {/* this is a hack to style the dragged items */}
+                        <ul id="sortingContainer" className="collection left-align" />
                     </Container>
                 )
                 : <Preloader />
