@@ -22,3 +22,12 @@ body {
 h1, h2, h3, h4, h5, h6 {
     color: rgba(0, 0, 0, .54)
 }
+
+.breadcrumbs {
+    padding-top: 10px;
+    text-align: left;
+    display:block;
+}
+.breadcrumbs i {
+    vertical-align: middle;
+}

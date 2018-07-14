@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { Preloader, Button, Container, Card, Collection, CollectionItem, Icon } from 'react-materialize'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -43,6 +44,7 @@ class AddClubMembers extends Component {
             club ?
                 (
                     <Container>
+                        <span className="breadcrumbs"><Link to={"/clubs/" + club._id}><Icon>keyboard_backspace</Icon> <span className="label">Club details</span></Link></span>
                         <h5>Invite friends to join <br />{club.name}</h5>
 
                         <Card>

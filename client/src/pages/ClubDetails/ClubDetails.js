@@ -87,6 +87,7 @@ class ClubDetails extends Component {
                 (
                     <Container>
                         {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
+                        <span className="breadcrumbs"><Link to="/clubs"><Icon>keyboard_backspace</Icon> <span className="label">Clubs</span></Link></span>
                         <h4>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
 
                         <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
@@ -108,6 +109,8 @@ class ClubDetails extends Component {
                             </Collection>
                             : null
                         }
+
+
 
 
                         {isOwner ?
