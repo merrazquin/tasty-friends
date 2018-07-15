@@ -5,6 +5,11 @@ module.exports = {
         db.Club
             .find(req.query)
             .sort({ name: 1 })
+            .populate('owner')
+            .populate('members.member')
+            .populate('events')
+            .populate('events.host')
+            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
@@ -14,6 +19,8 @@ module.exports = {
             .populate('owner')
             .populate('members.member')
             .populate('events')
+            .populate('events.host')
+            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
@@ -34,6 +41,8 @@ module.exports = {
             .populate('owner')
             .populate('members.member')
             .populate('events')
+            .populate('events.host')
+            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },

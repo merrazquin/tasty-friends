@@ -34,7 +34,8 @@ clubSchema = new Schema({
     frequency: {
         type: String,
         enum: ['weekly', 'monthly'],
-        required: true
+        required: true,
+        default: 'monthly'
     },
     events: [
         {

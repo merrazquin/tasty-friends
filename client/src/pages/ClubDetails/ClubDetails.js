@@ -6,9 +6,10 @@ import { Row, Preloader, Button, Container, Collection, Icon, Card, CollectionIt
 import { FrequencySelector } from '../../components/Clubs';
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
+import moment from 'moment'
 import './ClubDetails.css'
 
-const DragHandle = SortableHandle(() => <span className="secondary-content"><Icon>drag_handle</Icon></span>)
+const DragHandle = SortableHandle(() => <span className="secondary-content dragHandle"><Icon>drag_handle</Icon></span>)
 
 const Host = SortableElement(({ member, draggable }) =>
     <CollectionItem className="avatar">
@@ -30,10 +31,13 @@ const HostingRotation = SortableContainer(({ members, id, isOwner }) => {
 });
 
 class ClubDetails extends Component {
-    state = {
-        club: null,
-        isOwner: false,
-        redirect: false
+    constructor() {
+        super()
+        this.state = {
+            club: null,
+            isOwner: false,
+            redirect: false
+        }
     }
 
     getClubDetails = () => API.getClub(this.props.match.params.id).then(result => this.setState({ club: result.data, isOwner: this.props.context.userInfo._id === result.data.owner._id })).catch(err => console.error(err))
@@ -77,7 +81,78 @@ class ClubDetails extends Component {
         }
     }
 
-    render = () => {
+    displayEvents() {
+        const { club } = this.state,
+            { frequency } = club,
+            unit = frequency === 'monthly' ? 'm' : 'w',
+            today = new Date(),
+            currentMoment = moment(today),
+            nextMoment = moment(today).add(1, unit),
+            events = club.events.sort((eventA, eventB) => eventA.date - eventB.date).filter(event => event.date >= today),
+            currentEvent = events.find(event => moment(event.date).isBetween(currentMoment.startOf(unit), currentMoment.endOf(unit), '[]')),
+            nextEvent = events.find(event => moment(event.date).isBetween(nextMoment.startOf(unit), nextMoment.endOf(unit), '[]'))
+
+        let currentMember, nextMember, first = true
+
+        for (let i = 0; i < club.members.length; i++) {
+            const member = club.members[i];
+
+            if (member.willHost && first) {
+                first = false
+                currentMember = member
+                continue
+            }
+            if (member.willHost && !first) {
+                nextMember = member
+                break
+            }
+        }
+
+        if (!nextMember) {
+            nextMember = currentMember
+        }
+
+        return (
+            <Collection header={<span>Upcoming Events</span>} className="left-align">
+                <CollectionItem>
+                    <h5>Current ({this.renderRange(frequency, currentMoment)})</h5>
+                    {
+                        !currentEvent ?
+                            this.renderHostInfo(currentMember)
+                            : this.renderEvent(currentEvent)
+                    }
+                </CollectionItem>
+                <CollectionItem>
+                    <h5>Current ({this.renderRange(frequency, nextMoment)})</h5>
+                    {
+                        !nextEvent ?
+                            this.renderHostInfo(nextMember)
+                            : this.renderEvent(nextEvent)
+                    }
+                </CollectionItem>
+            </Collection>
+        )
+    }
+
+    renderRange(frequency, mMoment) {
+        return frequency === 'monthly' ? mMoment.format('MMMM') : (mMoment.startOf('w').format('MM/DD') + " - " + mMoment.endOf('w').format('MM/DD'))
+    }
+
+    renderHostInfo(member) {
+        return member ? (
+            <div>
+                <h6>{(member.member._id === this.props.context.userInfo._id ? "You" : member.member.displayName) + " will host"}</h6>
+                {member.member._id === this.props.context.userInfo._id ? <Button>Start planning</Button> : null}
+            </div>
+        ) : "Nobody available to host"
+    }
+
+
+    renderEvent(event) {
+        return <div>{event.name} {event.theme} {event.date} hosted by {event.host.displayName}</div>
+    }
+
+    render() {
         const { club, isOwner } = this.state,
             hostingMembers = club && club.members.filter(member => member.willHost),
             nonHostingMembers = club && club.members.filter(member => !member.willHost)
@@ -110,8 +185,7 @@ class ClubDetails extends Component {
                             : null
                         }
 
-
-
+                        {this.displayEvents()}
 
                         {isOwner ?
                             <Modal header="Delete Club?" trigger={<Button className="red lighten-1">Delete Club</Button>}

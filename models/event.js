@@ -43,13 +43,17 @@ const mongoose = require('mongoose'),
     }),
     eventSchema = new Schema({
         name: { type: String, trim: true, required: true },
-        theme: {type: String, trim: true},
+        theme: { type: String, trim: true },
         host: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
         },
         location: locationSchema,
+        date: {
+            type: Date,
+            required: true
+        },
         dates: [dateOptionSchema],
         club: {
             type: Schema.Types.ObjectId,

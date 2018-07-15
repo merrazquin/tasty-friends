@@ -1,3 +1,11 @@
 #sortingContainer {
-    border: 0px;
+    border: none;
+}
+
+.sorting {
+    border: 1px solid rgb(224, 224, 224);
+}
+
+.dragHandle {
+    cursor: pointer;
 }
