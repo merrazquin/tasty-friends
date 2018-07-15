@@ -28,6 +28,16 @@ h1, h2, h3, h4, h5, h6 {
     text-align: left;
     display:block;
 }
-.breadcrumbs i {
+i.material-icons {
     vertical-align: middle;
+    margin-top: -2px;
+}
+.editable, .clear-button {
+    cursor: pointer;
+}
+.editable:hover::after {
+    font-family: "Material Icons";
+    content: '\E3C9';
+    vertical-align: middle;
+    margin-left: 5px;
 }

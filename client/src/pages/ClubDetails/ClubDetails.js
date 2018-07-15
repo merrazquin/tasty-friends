@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
-import { Row, Preloader, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
+import { Row, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
+import { CenteredPreloader } from '../../components/CenteredPreloader'
 import { FrequencySelector } from '../../components/Clubs';
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
@@ -15,7 +16,7 @@ const Host = SortableElement(({ member, draggable }) =>
     <CollectionItem className="avatar">
         {/* only owners can change rotation */}
         {draggable ? <DragHandle /> : null}
-        <img src={member.member.avatar || "/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
+        <img src={member.member.avatar || "/images/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
         <h5>{member.member.displayName}</h5>
     </CollectionItem>
 );
@@ -46,6 +47,7 @@ class ClubDetails extends Component {
         const { isOwner, club } = this.state
 
         return (<Row className="left-align">
+            <h5>Frequency</h5>
             {isOwner ?
                 <FrequencySelector frequency={club.frequency} onChange={this.handleFrequencyChange} />
                 :
@@ -84,7 +86,7 @@ class ClubDetails extends Component {
     displayEvents() {
         const { club } = this.state,
             { frequency } = club,
-            unit = frequency === 'monthly' ? 'm' : 'w',
+            unit = frequency.slice(0, -2),
             today = new Date(),
             currentMoment = moment(today),
             nextMoment = moment(today).add(1, unit),
@@ -118,15 +120,15 @@ class ClubDetails extends Component {
                     <h5>Current ({this.renderRange(frequency, currentMoment)})</h5>
                     {
                         !currentEvent ?
-                            this.renderHostInfo(currentMember)
+                            this.renderHostInfo(currentMember, "current")
                             : this.renderEvent(currentEvent)
                     }
                 </CollectionItem>
                 <CollectionItem>
-                    <h5>Current ({this.renderRange(frequency, nextMoment)})</h5>
+                    <h5>Next ({this.renderRange(frequency, nextMoment)})</h5>
                     {
                         !nextEvent ?
-                            this.renderHostInfo(nextMember)
+                            this.renderHostInfo(nextMember, "next")
                             : this.renderEvent(nextEvent)
                     }
                 </CollectionItem>
@@ -138,11 +140,11 @@ class ClubDetails extends Component {
         return frequency === 'monthly' ? mMoment.format('MMMM') : (mMoment.startOf('w').format('MM/DD') + " - " + mMoment.endOf('w').format('MM/DD'))
     }
 
-    renderHostInfo(member) {
+    renderHostInfo(member, which) {
         return member ? (
             <div>
                 <h6>{(member.member._id === this.props.context.userInfo._id ? "You" : member.member.displayName) + " will host"}</h6>
-                {member.member._id === this.props.context.userInfo._id ? <Button>Start planning</Button> : null}
+                {member.member._id === this.props.context.userInfo._id ? <Link className="btn" to={this.props.match.url + "/plan/" + which}>Start planning</Link> : null}
             </div>
         ) : "Nobody available to host"
     }
@@ -163,11 +165,11 @@ class ClubDetails extends Component {
                     <Container>
                         {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                         <span className="breadcrumbs"><Link to="/clubs"><Icon>keyboard_backspace</Icon> <span className="label">Clubs</span></Link></span>
-                        <h4>{isOwner ? <RIEInput value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
 
-                        <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
+                        <Card>
+                            <h4>{isOwner ? <RIEInput className="editable" value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
+                            <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
 
-                        <Card title="Frequency">
                             {this.renderFrequency()}
                         </Card>
 
@@ -202,7 +204,7 @@ class ClubDetails extends Component {
                         <ul id="sortingContainer" className="collection left-align" />
                     </Container>
                 )
-                : <Preloader />
+                : <CenteredPreloader />
         )
     }
 

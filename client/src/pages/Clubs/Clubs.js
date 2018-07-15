@@ -26,12 +26,16 @@ class Clubs extends Component {
         return (
             <Container>
                 <Card>
-                    <Link to="/clubs/create" className="btn">Create Club</Link>
-                </Card>
-                <Card title="Accept Invitation">
-                    <Input onChange={this.updateInviteCode} type="text" label="Invitation Code" value={this.state.inviteCode} />
-                    <br />
-                    <Button onClick={this.joinByInvite}>Join Club</Button>
+                    <h4>Clubs Dashboard</h4>
+                    <div>
+                        <br />
+                        <Link to="/clubs/create" className="btn">Create Club</Link>
+                        <br />
+                        <br />
+                        <p>- OR -</p>
+                        <Input onChange={this.updateInviteCode} type="text" label="Accept Invitation" placeholder="Invitation Code" value={this.state.inviteCode} />
+                        <Button onClick={this.joinByInvite}>Join Club</Button>
+                    </div>
                 </Card>
                 {this.generateClubsList()}
 
@@ -53,7 +57,8 @@ class Clubs extends Component {
 
     updateInviteCode = event => {
         const { value } = event.target
-        this.setState({ inviteCode: value.toUpperCase() })
+        // Invite codes are 6 character long, and all uppercase
+        this.setState({ inviteCode: value.toUpperCase().substring(0, 6) })
     }
 
     joinByInvite = event => {

@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Preloader, Button, Container, Card, Collection, CollectionItem, Icon } from 'react-materialize'
+import { Button, Container, Card, Collection, CollectionItem, Icon } from 'react-materialize'
+import { CenteredPreloader } from '../../components/CenteredPreloader/CenteredPreloader'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import './AddClubMembers.css'
+
 
 
 class AddClubMembers extends Component {
@@ -57,7 +59,7 @@ class AddClubMembers extends Component {
                         <Collection header={<h5>Select friends</h5>} className="left-align">
                             {friends && friends.map(friend => (
                                 <CollectionItem key={friend._id} className="avatar">
-                                    <img src={friend.avatar || "/default-avatar.png"} alt={friend.displayName + "'s avatar"} className="circle" />
+                                    <img src={friend.avatar || "/images/default-avatar.png"} alt={friend.displayName + "'s avatar"} className="circle" />
                                     <h5>{friend.displayName}</h5>
                                     {
                                         club.members.find(member => member.member._id === friend._id) ?
@@ -71,7 +73,7 @@ class AddClubMembers extends Component {
 
                     </Container>
                 )
-                : <Preloader />
+                : <CenteredPreloader />
         )
     }
 }

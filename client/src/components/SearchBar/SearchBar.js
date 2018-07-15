@@ -17,7 +17,7 @@ class SearchBar extends Component {
     }
 
     componentDidMount() {
-        if (this.props.address.length) {
+        if (this.props.address && this.props.address.length) {
             this.setState({ address: this.props.address })
         }
     }
@@ -51,7 +51,7 @@ class SearchBar extends Component {
             });
     };
 
-    handleCloseClick = () => {
+    handleCloseClick = (event) => {
         const newState = {
             address: '',
             latitude: null,
@@ -87,16 +87,17 @@ class SearchBar extends Component {
                                 <div className="search-input-container">
                                     <Input
                                         {...getInputProps({
+                                            required: this.props.required || false,
                                             placeholder: 'Search...',
-                                            label: 'Default Hosting Location',
+                                            label: this.props.label || 'Location',
                                             className: 'search-input',
                                         })}
                                     />
                                     {this.state.address.length > 0 && (
-                                        <button
+                                        <a
                                             className="clear-button"
                                             onClick={this.handleCloseClick}
-                                        >x</button>
+                                        >x</a>
                                     )}
                                 </div>
                                 {suggestions.length > 0 && (
