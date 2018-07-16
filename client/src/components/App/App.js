@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import FacebookLogin from 'react-facebook-login'
 import AuthProvider from '../Session/AuthProvider'
+import AuthUserContext from '../Session/AuthUserContext'
 import Nav from '../Nav'
 import NavBar from '../NavBar'
 import Login from '../../pages/Login'
@@ -10,8 +11,8 @@ import Clubs from '../../pages/Clubs'
 import ClubDetails from '../../pages/ClubDetails'
 import ClubCreation from '../../pages/ClubCreation'
 import AddClubMembers from '../../pages/AddClubMembers'
+import EventPlanning from '../../pages/EventPlanning/EventPlanning'
 import './App.css'
-import AuthUserContext from '../Session/AuthUserContext';
 
 class App extends Component {
 
@@ -36,16 +37,17 @@ class App extends Component {
                                 <Route exact path="/clubs/create" component={ClubCreation} />
                                 <Route exact path="/clubs/:id" component={ClubDetails} />
                                 <Route exact path="/clubs/:id/invite" component={AddClubMembers} />
+                                <Route exact path="/clubs/:id/plan/:which" component={EventPlanning} />
                             </Switch>
-
+    
                         </div>
-                        <Route component={Nav} />
-                        <FacebookLogin cssClass="hidden" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} version="3.0" />
-                    </div>
+                            <Route component={Nav} />
+                            <FacebookLogin cssClass="hidden" appId={process.env.REACT_APP_FB_APP_ID} autoLoad={false} version="3.0" />
+                        </div>
                 </Router>
             </AuthProvider>
-        )
-    }
-}
-
-export default App
+                )
+            }
+        }
+        
+        export default App

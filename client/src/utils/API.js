@@ -61,5 +61,10 @@ export default {
 
     deleteClub: function (clubId) {
         return axios.delete('/api/club/' + clubId)
+    },
+        
+        // Create an event
+    createClubEvent: function(eventInfo) {
+        return axios.post('/api/event/', eventInfo)
     }
 }

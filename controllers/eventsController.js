@@ -17,7 +17,11 @@ module.exports = {
     create: function (req, res) {
         db.Event
             .create(req.body)
-            .then(dbModel => res.json(dbModel))
+            .then(eventModel =>
+                db.Club.findOneAndUpdate({ _id: req.body.club }, { $push: { events: eventModel._id } }, { new: true })
+                    .then(clubModel => res.json(eventModel))
+                    .catch(err => res.status(422).json(err))
+            )
             .catch(err => res.status(422).json(err));
     },
     update: function (req, res) {
