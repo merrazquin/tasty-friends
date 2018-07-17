@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'),
+    autopopulate = require('mongoose-autopopulate'),
     Schema = mongoose.Schema,
     locationSchema = new Schema({
         formattedAddress: String,
@@ -9,10 +10,11 @@ const mongoose = require('mongoose'),
     userClubSchema = new Schema({
         club: {
             type: Schema.Types.ObjectId,
-            ref: 'Club'
+            ref: 'Club',
+            autopopulate: { maxDepth: 2 }
         },
         isOwner: {
-            type:Boolean,
+            type: Boolean,
             default: false
         },
         hostingEnabled: Boolean
@@ -23,7 +25,10 @@ const mongoose = require('mongoose'),
         avatar: String,
         defaultLocation: locationSchema,
         clubs: [userClubSchema]
-    }),
-    User = mongoose.model('User', userSchema)
+    })
+
+userSchema.plugin(autopopulate)
+
+const User = mongoose.model('User', userSchema)
 
 module.exports = User

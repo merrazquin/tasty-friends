@@ -62,9 +62,14 @@ export default {
     deleteClub: function (clubId) {
         return axios.delete('/api/club/' + clubId)
     },
-        
-        // Create an event
-    createClubEvent: function(eventInfo) {
+
+    // Create an event
+    createClubEvent: function (eventInfo) {
         return axios.post('/api/event/', eventInfo)
+    },
+
+    // Get all events for a given user
+    getUserEvents: function (userId) {
+        return axios.get('/api/event/user/' + userId)
     }
 }

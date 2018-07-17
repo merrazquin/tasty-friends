@@ -4,7 +4,6 @@ module.exports = {
     findAll: function (req, res) {
         db.User
             .find(req.query)
-            .populate('clubs.club')
             .sort({ displayName: 1 })
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
@@ -12,7 +11,6 @@ module.exports = {
     findFBFriends: function (req, res) {
         db.User
             .find({ authId: { $in: req.body.fbIDs } })
-            .populate('clubs.club')
             .sort({ displayName: 1 })
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
@@ -20,14 +18,12 @@ module.exports = {
     findById: function (req, res) {
         db.User
             .findById(req.params.id)
-            .populate('clubs.club')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
     findByAuthId: function (req, res) {
         db.User
             .findOne({ authId: req.params.id })
-            .populate('clubs.club')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
@@ -47,7 +43,6 @@ module.exports = {
     update: function (req, res) {
         db.User
             .findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
-            .populate('clubs.club')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
@@ -64,7 +59,6 @@ module.exports = {
             .then(dbModel => {
                 db.User
                     .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
-                    .populate('clubs.club')
                     .then(dbModel => res.json(dbModel))
                     .catch(err => res.status(422).json(err))
             })
@@ -76,7 +70,6 @@ module.exports = {
             .then(dbModel => {
                 db.User
                     .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
-                    .populate('clubs.club')
                     .then(dbModel => res.json(dbModel))
                     .catch(err => res.status(422).json(dbModel))
             })

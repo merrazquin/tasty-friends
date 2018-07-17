@@ -90,9 +90,9 @@ class ClubDetails extends Component {
             today = new Date(),
             currentMoment = moment(today),
             nextMoment = moment(today).add(1, unit),
-            events = club.events.sort((eventA, eventB) => eventA.date - eventB.date).filter(event => event.date >= today),
-            currentEvent = events.find(event => moment(event.date).isBetween(currentMoment.startOf(unit), currentMoment.endOf(unit), '[]')),
-            nextEvent = events.find(event => moment(event.date).isBetween(nextMoment.startOf(unit), nextMoment.endOf(unit), '[]'))
+            events = club.events.sort((eventA, eventB) => new Date(eventA.date) - new Date(eventB.date)).filter(event => new Date(event.date) >= today),
+            currentEvent = events.find(event => moment(new Date(event.date)).isBetween(currentMoment.startOf(unit).toDate(), currentMoment.endOf(unit).toDate(), '[]')),
+            nextEvent = events.find(event => moment(new Date(event.date)).isBetween(nextMoment.startOf(unit).toDate(), nextMoment.endOf(unit).toDate(), '[]'))
 
         let currentMember, nextMember, first = true
 
@@ -117,7 +117,7 @@ class ClubDetails extends Component {
         return (
             <Collection header={<span>Upcoming Events</span>} className="left-align">
                 <CollectionItem>
-                    <h5>Current ({this.renderRange(frequency, currentMoment)})</h5>
+                    {!currentEvent && (<h5>Current ({this.renderRange(frequency, currentMoment)})</h5>)}
                     {
                         !currentEvent ?
                             this.renderHostInfo(currentMember, "current")
@@ -151,7 +151,21 @@ class ClubDetails extends Component {
 
 
     renderEvent(event) {
-        return <div>{event.name} {event.theme} {event.date} hosted by {event.host.displayName}</div>
+        const { _id, date, name, theme, host } = event,
+            { formattedAddress } = event.location,
+            isHost = host._id === this.props.context.userInfo._id,
+            rsvp = event.guests.find(guest => guest.user._id === this.props.context.userInfo._id)
+        return (
+            <div>
+                <h5>{moment(date).format('MM/DD')} {name}</h5>
+                <h6>Hosted by {isHost ? 'you' : host.displayName}</h6>
+                <span className="secondary-content"><Link to={"/events/" + _id}><Icon>chevron_right</Icon></Link></span>
+                {theme && (<p><Icon>lightbulb</Icon> {theme}</p>)}
+                <p><Icon>schedule</Icon> {moment(date).format('h:mma')}</p>
+                <p><Icon>place</Icon> <a href={"https://www.google.com/maps/place/" + formattedAddress.replace(' ', '+')} target="_blank">{formattedAddress}</a></p>
+                {!isHost && (<p>{rsvp ? ('You RSVPd ' + rsvp.rsvp) : 'You have not RSVPd'}</p>)}
+            </div>
+        )
     }
 
     render() {

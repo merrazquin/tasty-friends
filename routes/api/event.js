@@ -6,6 +6,9 @@ const router = require('express').Router(),
 router.route('/')
     .get(eventsController.findAll)
     .post(eventsController.create)
+    
+router.route('/user/:userId')
+    .get(eventsController.findByUser)
 
 router.route('/:id')
     .get(eventsController.findById)

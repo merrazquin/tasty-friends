@@ -1,4 +1,5 @@
 const mongoose = require('mongoose'),
+    autopopulate = require('mongoose-autopopulate'),
     Schema = mongoose.Schema,
     locationSchema = new Schema({
         formattedAddress: String,
@@ -13,7 +14,8 @@ const mongoose = require('mongoose'),
         },
         votes: [{
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            autopopulate: { maxDepth: 2 }
         }],
         confirmed: {
             type: Boolean,
@@ -27,13 +29,15 @@ const mongoose = require('mongoose'),
         },
         provider: {
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            autopopulate: { maxDepth: 2 }
         }
     }),
     guestSchema = new Schema({
         user: {
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            autopopulate: { maxDepth: 2 }
         },
         rsvp: {
             type: Number,
@@ -47,7 +51,8 @@ const mongoose = require('mongoose'),
         host: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true
+            required: true,
+            autopopulate: { maxDepth: 2 }
         },
         location: locationSchema,
         date: {
@@ -57,11 +62,14 @@ const mongoose = require('mongoose'),
         dates: [dateOptionSchema],
         club: {
             type: Schema.Types.ObjectId,
-            ref: 'Club'
+            ref: 'Club',
+            autopopulate: { maxDepth: 2 }
         },
         guests: [guestSchema],
         requests: [requestSchema]
-    }),
-    Event = mongoose.model('Event', eventSchema)
+    })
+
+eventSchema.plugin(autopopulate)
+const Event = mongoose.model('Event', eventSchema)
 
 module.exports = Event

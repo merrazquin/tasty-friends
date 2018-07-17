@@ -5,22 +5,12 @@ module.exports = {
         db.Club
             .find(req.query)
             .sort({ name: 1 })
-            .populate('owner')
-            .populate('members.member')
-            .populate('events')
-            .populate('events.host')
-            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
     findById: function (req, res) {
         db.Club
             .findById(req.params.id)
-            .populate('owner')
-            .populate('members.member')
-            .populate('events')
-            .populate('events.host')
-            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err))
     },
@@ -38,11 +28,6 @@ module.exports = {
     update: function (req, res) {
         db.Club
             .findByIdAndUpdate(req.params.id, req.body, { new: true })
-            .populate('owner')
-            .populate('members.member')
-            .populate('events')
-            .populate('events.host')
-            .populate('events.guests')
             .then(dbModel => res.json(dbModel))
             .catch(err => res.status(422).json(err));
     },
