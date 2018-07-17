@@ -39,7 +39,7 @@ export default {
         return axios.post('/api/club', clubInfo)
     },
 
-    // Retrieve information abotu a club
+    // Retrieve information about a club
     getClub: function (clubId) {
         return axios.get('/api/club/' + clubId)
     },
@@ -59,6 +59,7 @@ export default {
         return axios.put('/api/club/' + clubId + '/updateHosting', { userId: userId, hostingEnabled: hostingEnabled })
     },
 
+    // Delete a club
     deleteClub: function (clubId) {
         return axios.delete('/api/club/' + clubId)
     },
@@ -71,5 +72,15 @@ export default {
     // Get all events for a given user
     getUserEvents: function (userId) {
         return axios.get('/api/event/user/' + userId)
+    },
+
+    // Retrieve information about an event
+    getEvent: function (eventId) {
+        return axios.get('/api/event/' + eventId)
+    },
+
+    // Delete an event
+    deleteEvent: function (eventId) {
+        return axios.delete('/api/event/' + eventId)
     }
 }

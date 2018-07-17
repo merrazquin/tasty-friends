@@ -11,7 +11,8 @@ import Clubs from '../../pages/Clubs'
 import ClubDetails from '../../pages/ClubDetails'
 import ClubCreation from '../../pages/ClubCreation'
 import AddClubMembers from '../../pages/AddClubMembers'
-import EventPlanning from '../../pages/EventPlanning/EventPlanning'
+import EventPlanning from '../../pages/EventPlanning'
+import EventDetails from '../../pages/EventDetails'
 import './App.css'
 
 class App extends Component {
@@ -38,6 +39,7 @@ class App extends Component {
                                 <Route exact path="/clubs/:id" component={ClubDetails} />
                                 <Route exact path="/clubs/:id/invite" component={AddClubMembers} />
                                 <Route exact path="/clubs/:id/plan/:which" component={EventPlanning} />
+                                <Route exact path="/events/:id" component={EventDetails} />
                             </Switch>
     
                         </div>

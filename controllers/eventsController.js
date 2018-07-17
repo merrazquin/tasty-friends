@@ -28,20 +28,25 @@ module.exports = {
                     .then(clubModel => res.json(eventModel))
                     .catch(err => res.status(422).json(err))
             )
-            .catch(err => res.status(422).json(err));
+            .catch(err => res.status(422).json(err))
     },
     update: function (req, res) {
         db.Event
             .findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })
             .then(dbModel => res.json(dbModel))
-            .catch(err => res.status(422).json(err));
+            .catch(err => res.status(422).json(err))
     },
     remove: function (req, res) {
-        db.Event
-            .findById({ _id: req.params.id })
-            .then(dbModel => dbModel.remove())
-            .then(dbModel => res.json(dbModel))
-            .catch(err => res.status(422).json(err));
+        db.Club
+            .findOneAndUpdate({ events: req.params.id }, { $pull: { events: req.params.id } })
+            .then(
+                db.Event
+                    .findById(req.params.id)
+                    .then(dbModel => dbModel.remove())
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+                )
+            .catch (err => res.status(422).json(err))
     },
     addRequest: function (req, res) {
         db.Event

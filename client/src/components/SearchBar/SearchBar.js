@@ -79,7 +79,7 @@ class SearchBar extends Component {
                     value={address}
                     onSelect={this.handleSelect}
                     onError={this.handleError}
-                    shouldFetchSuggestions={address.length > 2}
+                    shouldFetchSuggestions={address.length > 1}
                 >
                     {({ getInputProps, suggestions, getSuggestionItemProps }) => {
                         return (
@@ -87,15 +87,15 @@ class SearchBar extends Component {
                                 <div className="search-input-container">
                                     <Input
                                         {...getInputProps({
+                                            s: 11,
                                             required: this.props.required || false,
                                             placeholder: 'Search...',
                                             label: this.props.label || 'Location',
-                                            className: 'search-input',
                                         })}
                                     />
                                     {this.state.address.length > 0 && (
                                         <a
-                                            className="clear-button"
+                                            className="col s1 clear-button left-align"
                                             onClick={this.handleCloseClick}
                                         >x</a>
                                     )}

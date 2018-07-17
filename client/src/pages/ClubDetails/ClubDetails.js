@@ -125,7 +125,7 @@ class ClubDetails extends Component {
                     }
                 </CollectionItem>
                 <CollectionItem>
-                    <h5>Next ({this.renderRange(frequency, nextMoment)})</h5>
+                    {!nextEvent && <h5>Next ({this.renderRange(frequency, nextMoment)})</h5>}
                     {
                         !nextEvent ?
                             this.renderHostInfo(nextMember, "next")
@@ -206,8 +206,8 @@ class ClubDetails extends Component {
                         {isOwner ?
                             <Modal header="Delete Club?" trigger={<Button className="red lighten-1">Delete Club</Button>}
                                 actions={<span>
-                                    <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
                                     <Button className="modal-close">Cancel</Button>
+                                    <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
                                 </span>}>
                                 <p>Are you sure you want to delete "{club.name}"?</p>
                             </Modal>

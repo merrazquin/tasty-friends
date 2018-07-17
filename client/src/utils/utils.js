@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export default {
     convertTimeto24Hour: function (time) {
         const AMPM = time.slice(-2)
@@ -13,5 +15,15 @@ export default {
         if (minutes < 10) sMinutes = "0" + sMinutes
 
         return { hours, minutes, string: sHours + ":" + sMinutes }
+    },
+
+    getDateRange: function(unit, which) {
+        const today = new Date(),
+            range = { min: today }
+
+
+        range.min = which === "current" ? today : moment(today).startOf(unit).add(1, unit).toDate()
+        range.max = moment(today).add(which === "current" ? 0 : 1, unit).endOf(unit).toDate()
+        return range
     }
 }
