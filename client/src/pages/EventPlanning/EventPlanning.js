@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Container, Row, Card } from 'react-materialize'
+import { Container, Row, Card, Input, Collection, CollectionItem, Icon, Button } from 'react-materialize'
 import { CenteredPreloader } from '../../components/CenteredPreloader'
 import API from '../../utils/API'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -15,6 +15,7 @@ class EventPlanning extends Component {
             eventObj: {},
             dateSelected: null,
             timeSelected: '07:00PM',
+            request: '',
             redirect: false
         }
     }
@@ -45,8 +46,14 @@ class EventPlanning extends Component {
     handleChange = event => {
         const { name, value } = event.target,
             { eventObj } = this.state
-        eventObj[name] = value;
-        this.setState({ eventObj })
+        switch (name) {
+            case 'request':
+                this.setState({ [name]: value })
+                break;
+            default:
+                eventObj[name] = value;
+                this.setState({ eventObj })
+        }
     }
 
     handleAddressChange = ({ address, latitude, longitude }) => {
@@ -59,6 +66,38 @@ class EventPlanning extends Component {
 
     handleDateChange = (event, val) => {
         this.setState({ [event.target.name + 'Selected']: val })
+    }
+
+    addRequest = (event) => {
+        if (event.type === 'click' || event.key === 'Enter') {
+            event.preventDefault()
+            const { eventObj } = this.state
+            if (!eventObj.requests) {
+                eventObj.requests = []
+            }
+            eventObj.requests.push({ request: this.state.request })
+            this.setState({ eventObj, request: '' })
+        }
+    }
+    renderRequests = () => {
+        return (
+            <Collection header="Requests">
+
+                <CollectionItem>
+                    <Row>
+                        <Input s={10} name="request" onKeyPress={this.addRequest} onChange={this.handleChange} label="Request" placeholder="Bottle of wine" value={this.state.request} />
+                        <div className="input-field col s2">
+                            <Button name="addRequest" s={2} onClick={this.addRequest}><Icon>add</Icon></Button>
+                        </div>
+                    </Row>
+                </CollectionItem>
+                {
+                    this.state.eventObj.requests ?
+                        this.state.eventObj.requests.map((request, index) => <CollectionItem className="left-align" key={"req_" + index}>{request.request}</CollectionItem>)
+                        : <span></span>
+                }
+            </Collection>
+        )
     }
 
     componentDidMount() {
@@ -96,6 +135,8 @@ class EventPlanning extends Component {
                             time={this.state.timeSelected}
                             dateOptions={utils.getDateRange(club.frequency.slice(0, -1), this.props.match.params.which)}
                         />
+
+                        {this.renderRequests()}
 
                         <Row>
                             <Link to={"/clubs/" + this.state.club._id} className="btn red lighten-1">Cancel</Link>&nbsp;

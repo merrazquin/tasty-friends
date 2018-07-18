@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { Input } from 'react-materialize'
+import { Input, Icon } from 'react-materialize'
 
 import './SearchBar.css'
 
@@ -87,17 +87,19 @@ class SearchBar extends Component {
                                 <div className="search-input-container">
                                     <Input
                                         {...getInputProps({
-                                            s: 11,
+                                            s: 10,
                                             required: this.props.required || false,
                                             placeholder: 'Search...',
                                             label: this.props.label || 'Location',
                                         })}
                                     />
                                     {this.state.address.length > 0 && (
-                                        <a
-                                            className="col s1 clear-button left-align"
-                                            onClick={this.handleCloseClick}
-                                        >x</a>
+                                        <div className="input-field col s2">
+                                            <a
+                                                className="btn-flat"
+                                                onClick={this.handleCloseClick}
+                                            ><Icon>close</Icon></a>
+                                        </div>
                                     )}
                                 </div>
                                 {suggestions.length > 0 && (

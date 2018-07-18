@@ -6,15 +6,6 @@
     position: relative;
 }
 
-
-.clear-button, .clear-button:active, .clear-button:focus {
-    background: transparent;
-    outline: none;
-    font-weight: 600;
-    color: #999;
-    margin-top: 20px;
-}
-
 .autocomplete-container {
     clear: both;
     border-bottom: honeydew;
