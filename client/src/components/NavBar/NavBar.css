@@ -1,3 +1,7 @@
+nav.topNav>div.nav-wrapper {
+    text-align: left;
+    margin-left: 10px;
+}
 .brand-logo {
     font-family: 'Lobster Two', cursive;
 }

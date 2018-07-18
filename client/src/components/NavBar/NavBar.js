@@ -7,7 +7,7 @@ import './NavBar.css'
 class NavBar extends Component {
     render() {
         return (
-            <Navbar brand="Tasty Friends" right options={{ closeOnClick: true }}>
+            <Navbar className="topNav" brand="Tasty Friends" right options={{ closeOnClick: true }}>
                 <AuthUserContext.Consumer>
                     {context => context.userInfo ? <NavItem onClick={context.logout}>Logout</NavItem> : <Login />}
                 </AuthUserContext.Consumer>
