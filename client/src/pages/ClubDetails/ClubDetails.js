@@ -4,11 +4,14 @@ import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
 import { Row, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
 import { CenteredPreloader } from '../../components/CenteredPreloader'
-import { FrequencySelector } from '../../components/Clubs';
+import { FrequencySelector } from '../../components/Clubs'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import moment from 'moment'
 import './ClubDetails.css'
+import { EventSummary } from '../../components/Events';
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+
 
 const DragHandle = SortableHandle(() => <span className="secondary-content dragHandle"><Icon>drag_handle</Icon></span>)
 
@@ -19,17 +22,17 @@ const Host = SortableElement(({ member, draggable }) =>
         <img src={member.member.avatar || "/images/default-avatar.png"} alt={member.member.displayName + "'s avatar"} className="circle" />
         <h5>{member.member.displayName}</h5>
     </CollectionItem>
-);
+)
 
-const HostingRotation = SortableContainer(({ members, id, isOwner }) => {
+const HostingRotation = SortableContainer(({ members, id, isOwner, inviteCode }) => {
     return (
-        <Collection header={<div><span>Hosting Rotation</span><Link to={id + '/invite'} className="secondary-content"><Icon>person_add</Icon></Link></div>} className="left-align">
+        <Collection header={<span>Hosting Rotation</span>} className="left-align">
             {members.map((member, index) => (
                 <Host key={`draggableMember-${index}`} index={index} member={member} draggable={isOwner} />
             ))}
         </Collection>
-    );
-});
+    )
+})
 
 class ClubDetails extends Component {
     constructor() {
@@ -43,17 +46,10 @@ class ClubDetails extends Component {
 
     getClubDetails = () => API.getClub(this.props.match.params.id).then(result => this.setState({ club: result.data, isOwner: this.props.context.userInfo._id === result.data.owner._id })).catch(err => console.error(err))
 
-    renderFrequency = () => {
-        const { isOwner, club } = this.state
-
-        return (<Row className="left-align">
-            <h5>Frequency</h5>
-            {isOwner ?
-                <FrequencySelector frequency={club.frequency} onChange={this.handleFrequencyChange} />
-                :
-                <span>{club.frequency}</span>
-            }
-        </Row>)
+    handleRSVP(eventId, rsvp) {
+        API.rsvpToEvent(this.props.context.userInfo._id, eventId, rsvp)
+            .then(() => this.getClubDetails())
+            .catch(err => console.error(err))
     }
 
     // Add the dragged item to a styled container so it can inherit the correct styles
@@ -121,7 +117,7 @@ class ClubDetails extends Component {
                     {
                         !currentEvent ?
                             this.renderHostInfo(currentMember, "current")
-                            : this.renderEvent(currentEvent)
+                            : <EventSummary event={currentEvent} userId={this.props.context.userInfo._id} handlRSVP={(eventId, rsvp) => this.handleRSVP(eventId, rsvp)} showNav />
                     }
                 </CollectionItem>
                 <CollectionItem>
@@ -129,7 +125,7 @@ class ClubDetails extends Component {
                     {
                         !nextEvent ?
                             this.renderHostInfo(nextMember, "next")
-                            : this.renderEvent(nextEvent)
+                            : <EventSummary event={nextEvent} userId={this.props.context.userInfo._id} handleRSVP={(eventId, rsvp) => this.handleRSVP(eventId, rsvp)} showNav />
                     }
                 </CollectionItem>
             </Collection>
@@ -149,25 +145,6 @@ class ClubDetails extends Component {
         ) : "Nobody available to host"
     }
 
-
-    renderEvent(event) {
-        const { _id, date, name, theme, host } = event,
-            { formattedAddress } = event.location,
-            isHost = host._id === this.props.context.userInfo._id,
-            rsvp = event.guests.find(guest => guest.user._id === this.props.context.userInfo._id)
-        return (
-            <div>
-                <h5>{moment(date).format('MM/DD')} {name}</h5>
-                <h6>Hosted by {isHost ? 'you' : host.displayName}</h6>
-                <span className="secondary-content"><Link to={"/events/" + _id}><Icon>chevron_right</Icon></Link></span>
-                {theme && (<p><Icon>lightbulb</Icon> {theme}</p>)}
-                <p><Icon>schedule</Icon> {moment(date).format('h:mma')}</p>
-                <p><Icon>place</Icon> <a href={"https://www.google.com/maps/place/" + formattedAddress.replace(' ', '+')} target="_blank">{formattedAddress}</a></p>
-                {!isHost && (<p>{rsvp ? ('You RSVPd ' + rsvp.rsvp) : 'You have not RSVPd'}</p>)}
-            </div>
-        )
-    }
-
     render() {
         const { club, isOwner } = this.state,
             hostingMembers = club && club.members.filter(member => member.willHost),
@@ -178,16 +155,30 @@ class ClubDetails extends Component {
                 (
                     <Container>
                         {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
-                        <span className="breadcrumbs"><Link to="/clubs"><Icon>keyboard_backspace</Icon> <span className="label">Clubs</span></Link></span>
+                        <span className="breadcrumbs"><Button className="btn-flat" onClick={() => this.props.history.goBack()}><Icon>keyboard_backspace</Icon> <span className="label">Clubs</span></Button></span>
 
                         <Card>
                             <h4>{isOwner ? <RIEInput className="editable" value={club.name} change={this.handleNameChange} validate={(str) => str.length} propName="name" /> : club.name}</h4>
-                            <h6>Organized by: {isOwner ? 'you' : club.owner.displayName}</h6>
+                            <h6>{!isOwner ? `A ${club.frequency} club organized by: ` : 'Organized by: '} {isOwner ? 'you' : club.owner.displayName}</h6>
 
-                            {this.renderFrequency()}
+                            {
+                                isOwner ?
+                                    <Row className="left-align">
+                                        <h5>Frequency</h5>
+
+                                        <FrequencySelector frequency={club.frequency} onChange={this.handleFrequencyChange} />
+                                    </Row>
+                                    : null
+                            }
+                            <Row className="left-align">
+                                <h5>Invite friends to join:</h5>
+                                <CopyToClipboard text={club.inviteCode} onCopy={() => this.props.context.popupToast('Copied!', 2000)}>
+                                    <Button className="secondary-content">{club.inviteCode}</Button>
+                                </CopyToClipboard>
+                            </Row>
                         </Card>
 
-                        <HostingRotation useDragHandle={true} helperClass="sorting" onSortStart={this.sortStart} onSortEnd={this.updateOrder} members={hostingMembers} isOwner={this.state.isOwner} id={club._id} />
+                        <HostingRotation useDragHandle={true} helperClass="sorting" onSortStart={this.sortStart} onSortEnd={this.updateOrder} members={hostingMembers} isOwner={this.state.isOwner} id={club._id} inviteCode={club.inviteCode} />
 
                         {nonHostingMembers.length ?
                             <Collection header={<span>Non-hosting Members</span>} className="left-align">
@@ -205,10 +196,12 @@ class ClubDetails extends Component {
 
                         {isOwner ?
                             <Modal header="Delete Club?" trigger={<Button className="red lighten-1">Delete Club</Button>}
-                                actions={<span>
-                                    <Button className="modal-close">Cancel</Button>
-                                    <Button className="modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
-                                </span>}>
+                                actions={
+                                    <span>
+                                        <Button className="modal-action modal-close btn-flat">Cancel</Button>
+                                        <Button className="modal-action modal-close red lighten-1" onClick={this.deleteClub}>Yes</Button>
+                                    </span>
+                                }>
                                 <p>Are you sure you want to delete "{club.name}"?</p>
                             </Modal>
 

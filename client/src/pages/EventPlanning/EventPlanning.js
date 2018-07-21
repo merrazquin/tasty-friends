@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Container, Row, Card, Input, Collection, CollectionItem, Icon, Button } from 'react-materialize'
+import { Container, Row, Card, Col } from 'react-materialize'
 import { CenteredPreloader } from '../../components/CenteredPreloader'
 import API from '../../utils/API'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -68,9 +68,14 @@ class EventPlanning extends Component {
         this.setState({ [event.target.name + 'Selected']: val })
     }
 
-    addRequest = (event) => {
+    handleRequestAdd = (event) => {
         if (event.type === 'click' || event.key === 'Enter') {
             event.preventDefault()
+            
+            if (!this.state.request) {
+                return window.Materialize.toast('Please provide a request', 2000)
+            }
+
             const { eventObj } = this.state
             if (!eventObj.requests) {
                 eventObj.requests = []
@@ -79,25 +84,11 @@ class EventPlanning extends Component {
             this.setState({ eventObj, request: '' })
         }
     }
-    renderRequests = () => {
-        return (
-            <Collection header="Requests">
 
-                <CollectionItem>
-                    <Row>
-                        <Input s={10} name="request" onKeyPress={this.addRequest} onChange={this.handleChange} label="Request" placeholder="Bottle of wine" value={this.state.request} />
-                        <div className="input-field col s2">
-                            <Button name="addRequest" s={2} onClick={this.addRequest}><Icon>add</Icon></Button>
-                        </div>
-                    </Row>
-                </CollectionItem>
-                {
-                    this.state.eventObj.requests ?
-                        this.state.eventObj.requests.map((request, index) => <CollectionItem className="left-align" key={"req_" + index}>{request.request}</CollectionItem>)
-                        : <span></span>
-                }
-            </Collection>
-        )
+    handleRequestRemove = (index) => {
+        const { eventObj } = this.state
+        eventObj.requests.splice(index, 1)
+        this.setState({ eventObj })
     }
 
     componentDidMount() {
@@ -125,22 +116,29 @@ class EventPlanning extends Component {
                 <form onSubmit={this.createEvent}>
                     {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                     <Card>
-                        <h4>Plan Event for {club.name}</h4>
                         <EventInfo
+                            editable={true}
+                            userId={this.props.context.userInfo._id}
+                            header={<h4>Plan Event for {club.name}</h4>}
                             changeHandler={this.handleChange}
                             addressChangeHandler={this.handleAddressChange}
                             dateChangeHandler={this.handleDateChange}
+                            requestHandler={this.handleRequestAdd}
+                            requestRemover={this.handleRequestRemove}
                             eventObj={eventObj}
                             address={(eventObj.location && eventObj.location.formattedAddress) || (userInfo.defaultLocation && userInfo.defaultLocation.formattedAddress)}
                             time={this.state.timeSelected}
-                            dateOptions={utils.getDateRange(club.frequency.slice(0, -1), this.props.match.params.which)}
+                            dateOptions={utils.getDateRange(club.frequency.slice(0, -2), this.props.match.params.which)}
+                            request={this.state.request}
                         />
 
-                        {this.renderRequests()}
-
                         <Row>
-                            <Link to={"/clubs/" + this.state.club._id} className="btn red lighten-1">Cancel</Link>&nbsp;
-                            <input type="submit" value="Create" className="btn" />
+                            <Col s={6} className="input-field right-align">
+                                <Link to={"/clubs/" + this.state.club._id} className="btn red lighten-1">Cancel</Link>
+                            </Col>
+                            <Col s={6} className="input-field left-align">
+                                <input type="submit" value="Create" className="btn" />
+                            </Col>
                         </Row>
                     </Card>
                 </form>

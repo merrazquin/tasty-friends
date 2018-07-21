@@ -4,7 +4,14 @@ nav.nav-center ul {
 nav.nav-center ul li {
     display: inline-block;
     float: none;
+    width: 33%;
+}
+nav.nav-center ul li:hover {
+    background-color: rgba(0,0,0,0.1)
 }
 nav.nav-center ul li a {
     display: inline-block;
+}
+nav.nav-center ul li a:hover {
+    background-color: rgba(0,0,0,0)
 }

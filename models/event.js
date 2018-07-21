@@ -34,7 +34,7 @@ const mongoose = require('mongoose'),
         }
     }),
     guestSchema = new Schema({
-        user: {
+        guest: {
             type: Schema.Types.ObjectId,
             ref: 'User',
             autopopulate: { maxDepth: 2 }

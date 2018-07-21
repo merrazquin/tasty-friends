@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import AuthUserContext from '../../components/Session/AuthUserContext'
-import { Card, Input, Collection, CollectionItem, Container } from 'react-materialize'
+import { Row, Card, Input, Collection, CollectionItem, Container } from 'react-materialize'
 import { CenteredPreloader } from '../../components/CenteredPreloader/CenteredPreloader'
 import SearchBar from '../../components/SearchBar'
 import './UserSettings.css'
@@ -11,13 +11,16 @@ class UserSettings extends Component {
 
         if (!context.userInfo) return <CenteredPreloader />
 
+
         return (
             <Container>
                 <form>
                     <Card>
                         <h4>User Settings</h4>
-                        <Input name="displayName" onChange={context.updateUserInfo} s={12} label="Display Name" placeholder="John Doe" defaultValue={context.userInfo.displayName} />
-                        <SearchBar label="Default Hosting Location" onChange={context.updateUserAddress} address={context.userInfo.defaultLocation && context.userInfo.defaultLocation.formattedAddress} />
+                        <Row>
+                            <Input name="displayName" onChange={context.updateUserInfo} s={12} label="Display Name" placeholder="John Doe" defaultValue={context.userInfo.displayName} />
+                            <SearchBar label="Default Hosting Location" onChange={context.updateUserAddress} address={context.userInfo.defaultLocation && context.userInfo.defaultLocation.formattedAddress} />
+                        </Row>
                     </Card>
                     {context.userInfo && context.userInfo.clubs.length ?
                         <Collection header="Hosting Availability" className="left-align">
@@ -33,7 +36,7 @@ class UserSettings extends Component {
                             )}
                         </Collection>
                         :
-                        <span>No clubs</span>
+                        null
                     }
                     <br />
                 </form>

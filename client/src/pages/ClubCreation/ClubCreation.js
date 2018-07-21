@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { Row, Input, Card, Container } from 'react-materialize'
+import { Row, Input, Card, Container, Col } from 'react-materialize'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
 import { FrequencySelector } from '../../components/Clubs';
@@ -19,14 +19,20 @@ class ClubCreation extends Component {
                     {this.state.redirect ? <Redirect to={this.state.redirect} /> : null}
                     <Card>
                         <h4>Create Club</h4>
-                        <Input type="text" name="name" label="Club Name" defaultValue={this.state.name} onChange={this.handleChange} required />
+                        <Row>
+                            <Input s={12} type="text" name="name" label="Club Name" defaultValue={this.state.name} onChange={this.handleChange} required />
+                        </Row>
                         <Row className="left-align">
                             <h6>Frequency</h6>
                             <FrequencySelector frequency={this.state.frequency} onChange={this.handleChange} />
                         </Row>
                         <Row>
-                            <Link to="/clubs" className="btn red lighten-1">Cancel</Link>&nbsp;
-                            <input type="submit" value="Create" className="btn" />
+                            <Col s={6} className="input-field right-align">
+                                <Link to="/clubs" className="btn red lighten-1">Cancel</Link>
+                            </Col>
+                            <Col s={6} className="input-field left-align">
+                                <input type="submit" value="Create" className="btn" />
+                            </Col>
                         </Row>
                     </Card>
                 </form>

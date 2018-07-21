@@ -1,3 +1,6 @@
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { Icon } from 'react-materialize'
 import moment from 'moment'
 
 export default {
@@ -17,13 +20,13 @@ export default {
         return { hours, minutes, string: sHours + ":" + sMinutes }
     },
 
-    getDateRange: function(unit, which) {
+    getDateRange: function (unit, which) {
         const today = new Date(),
             range = { min: today }
 
-
         range.min = which === "current" ? today : moment(today).startOf(unit).add(1, unit).toDate()
         range.max = moment(today).add(which === "current" ? 0 : 1, unit).endOf(unit).toDate()
+
         return range
-    }
+    },
 }

@@ -28,6 +28,14 @@ h1, h2, h3, h4, h5, h6 {
     text-align: left;
     display:block;
 }
+.breadcrumbs button.btn-flat {
+    margin:0px;
+    padding:0px;
+    color: rgb(3, 155, 229);
+}
+.breadcrumbs button.btn-flat:hover {
+    background: transparent;
+}
 i.material-icons {
     vertical-align: middle;
     margin-top: -2px;
@@ -40,4 +48,34 @@ i.material-icons {
     content: '\E3C9';
     vertical-align: middle;
     margin-left: 5px;
+}
+
+.btn-small {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.card .card-content {
+    padding-top: 12px;
+}
+
+div.switch {
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+div.switch label {
+    font-size: 1rem;
+}
+
+div.switch {
+    cursor: pointer;
+    -webkit-user-select: none;
+    /* Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+/Edge */
+    user-select: none;
+    /* Standard */
 }

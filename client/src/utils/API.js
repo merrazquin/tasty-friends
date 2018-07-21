@@ -56,7 +56,7 @@ export default {
 
     // Update a club member's hosting availability 
     updateHostingStatus(clubId, userId, hostingEnabled) {
-        return axios.put('/api/club/' + clubId + '/updateHosting', { userId: userId, hostingEnabled: hostingEnabled })
+        return axios.put('/api/club/' + clubId + '/updateHosting', { userId, hostingEnabled })
     },
 
     // Delete a club
@@ -67,6 +67,11 @@ export default {
     // Create an event
     createClubEvent: function (eventInfo) {
         return axios.post('/api/event/', eventInfo)
+    },
+
+    // Update an event's details
+    updateClubEvent: function (eventInfo) {
+        return axios.put('/api/event/' + eventInfo._id, eventInfo)
     },
 
     // Get all events for a given user
@@ -82,5 +87,25 @@ export default {
     // Delete an event
     deleteEvent: function (eventId) {
         return axios.delete('/api/event/' + eventId)
+    },
+
+    addEventRequest: function (eventId, request) {
+        return axios.post('/api/event/' + eventId + '/request', { request })
+    },
+
+    removeEventRequest: function (eventId, requestId) {
+        return axios.delete('/api/event/' + eventId + '/request/' + requestId)
+    },
+
+    claimEventRequest: function (userId, requestId) {
+        return axios.put('/api/user/' + userId + '/bringing/' + requestId)
+    },
+
+    unclaimEventRequest: function (userId, requestId) {
+        return axios.delete('/api/user/' + userId + '/bringing/' + requestId)
+    },
+
+    rsvpToEvent: function(userId, eventId, rsvp) {
+        return axios.put('/api/user/'+userId+'/rsvp/'+eventId, {rsvp})
     }
 }

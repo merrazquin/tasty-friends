@@ -15,9 +15,14 @@ module.exports = {
             .catch(err => res.status(422).json(err))
     },
     findByUser: function (req, res) {
-        db.Event
-            .find({ $or: [{ host: req.params.userId }, { guests: { user: req.params.userId } }] })
-            .then(dbModel => res.json(dbModel))
+        db.User
+            .findById(req.params.userId, 'clubs.club', {autopopulate: false})
+            .then(userModel => {
+                db.Event
+                    .find({ $or: [{ host: req.params.userId }, { guests: { user: req.params.userId } }, {club: {$in: userModel.clubs.map(club => club.club)}}] })
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+            })
             .catch(err => res.status(422).json(err))
     },
     create: function (req, res) {
@@ -45,8 +50,8 @@ module.exports = {
                     .then(dbModel => dbModel.remove())
                     .then(dbModel => res.json(dbModel))
                     .catch(err => res.status(422).json(err))
-                )
-            .catch (err => res.status(422).json(err))
+            )
+            .catch(err => res.status(422).json(err))
     },
     addRequest: function (req, res) {
         db.Event

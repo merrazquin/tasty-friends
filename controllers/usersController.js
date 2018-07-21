@@ -55,7 +55,7 @@ module.exports = {
     },
     joinClub: function (req, res) {
         db.Club
-            .findOneAndUpdate({ _id: req.params.club, owner: { $not: {$eq: req.params.id } }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
+            .findOneAndUpdate({ _id: req.params.club, owner: { $not: { $eq: req.params.id } }, members: { $not: { $elemMatch: { member: req.params.id } } } }, { $push: { members: { member: req.params.id, willHost: req.body.willHost } } }, { new: true })
             .then(dbModel => {
                 db.User
                     .findByIdAndUpdate(req.params.id, { $push: { clubs: { club: dbModel._id, hostingEnabled: req.body.willHost } } }, { new: true })
@@ -76,15 +76,29 @@ module.exports = {
             .catch(err => res.status(422).json(dbModel))
     },
     leaveClub: function (req, res) {
-        db.Club
-            .findOneAndUpdate({ _id: req.params.club }, { $pull: { members: { member: req.params.id } } }, { new: true })
-            .then(dbModel => res.json(dbModel))
-            .create(err => res.status(422).json(err))
+        db.User
+            .findByIdAndUpdate(req.params.id, { $pull: { clubs: { club: req.params.club } } }, { new: true })
+            .then(() => {
+                db.Club
+                    .findOneAndUpdate({ _id: req.params.club }, { $pull: { members: { member: req.params.id } } }, { new: true })
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+            })
+            .catch(err => res.status(422).json(err))
     },
     rsvpToEvent: function (req, res) {
         db.Event
-            .findOneAndUpdate({ _id: req.params.event }, { $push: { guests: { user: req.params.id, rsvp: req.body.rsvp } } }, { new: true })
-            .then(dbModel => res.json(dbModel))
+            .findOneAndUpdate({ _id: req.params.event, 'guests.guest': req.params.id }, { $set: { 'guests.$.rsvp': req.body.rsvp } }, { new: true })
+            .then(dbModel => {
+                if (dbModel) {
+                    return res.json(dbModel)
+                }
+
+                db.Event
+                    .findOneAndUpdate({ _id: req.params.event }, { $push: { guests: { guest: req.params.id, rsvp: req.body.rsvp } } }, { new: true })
+                    .then(dbModel => res.json(dbModel))
+                    .catch(err => res.status(422).json(err))
+            })
             .catch(err => res.status(422).json(err))
     },
     voteForDate: function (req, res) {

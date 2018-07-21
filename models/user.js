@@ -17,7 +17,10 @@ const mongoose = require('mongoose'),
             type: Boolean,
             default: false
         },
-        hostingEnabled: Boolean
+        hostingEnabled: {
+            type:Boolean,
+            default: true
+        }
     }),
     userSchema = new Schema({
         authId: { type: String, required: true },

@@ -87,16 +87,16 @@ class SearchBar extends Component {
                                 <div className="search-input-container">
                                     <Input
                                         {...getInputProps({
-                                            s: 10,
+                                            s: 11,
                                             required: this.props.required || false,
                                             placeholder: 'Search...',
                                             label: this.props.label || 'Location',
                                         })}
                                     />
                                     {this.state.address.length > 0 && (
-                                        <div className="input-field col s2">
+                                        <div className="input-field col s1">
                                             <a
-                                                className="btn-flat"
+                                                className="btn-flat btn-small"
                                                 onClick={this.handleCloseClick}
                                             ><Icon>close</Icon></a>
                                         </div>
