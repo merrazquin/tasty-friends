@@ -1,11 +1,11 @@
 import React from 'react'
 import { Collection, CollectionItem, Button, Icon, Row, Input, Col } from 'react-materialize'
 import SearchBar from '../SearchBar'
-import utils from '../../utils/utils'
 import { EventSummary } from './EventSummary';
 
 export const EventInfo = props => {
-    const { editable, userId, header, changeHandler, addressChangeHandler, dateChangeHandler, handleRequestClaims, requestHandler, rsvpHandler, requestRemover, request, eventObj, date, time, address, dateOptions } = props
+    const { editable, userId, header, changeHandler, addressChangeHandler, dateChangeHandler, handleRequestClaims, requestHandler, rsvpHandler, requestRemover, request, eventObj, date, time, address, dateOptions } = props,
+        rsvp = eventObj.guests.find(guest => guest.guest && guest.guest._id === userId)
     return (
         <div>
             {header}
@@ -52,7 +52,7 @@ export const EventInfo = props => {
                                                     request.provider && request.provider._id === userId ?
                                                         <Button className="btn-small" onClick={(evt) => { evt.preventDefault(); handleRequestClaims(request._id, false) }}>Unclaim</Button>
                                                         :
-                                                        <Button disabled={request.provider} className="btn-small" onClick={(evt) => { evt.preventDefault(); handleRequestClaims(request._id) }}>Claim</Button>
+                                                        <Button disabled={request.provider || (!rsvp || !rsvp.rsvp) } className="btn-small" onClick={(evt) => { evt.preventDefault(); handleRequestClaims(request._id) }}>Claim</Button>
                                                 )
                                             }
                                         </Col>

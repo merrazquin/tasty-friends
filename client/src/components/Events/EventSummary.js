@@ -5,10 +5,6 @@ import moment from 'moment'
 
 export const EventSummary = props => {
 
-    const rsvpModule = () => {
-
-    }
-
     const { event, userId, showNav, handleRSVP } = props,
         { _id, date, name, theme, host } = event,
         { formattedAddress } = event.location,

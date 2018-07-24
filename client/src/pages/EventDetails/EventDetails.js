@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import { CenteredPreloader } from '../../components/CenteredPreloader'
 import { Container, Card, Icon, Modal, Button } from 'react-materialize'

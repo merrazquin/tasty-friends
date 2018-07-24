@@ -90,6 +90,25 @@ module.exports = {
         db.Event
             .findOneAndUpdate({ _id: req.params.event, 'guests.guest': req.params.id }, { $set: { 'guests.$.rsvp': req.body.rsvp } }, { new: true })
             .then(dbModel => {
+
+                if (!req.body.rsvp) {
+                    db.Event
+                        .findById(req.params.event, {}, { autopopulate: false })
+                        .then(eventModel => {
+                            let { requests } = eventModel
+                            requests.forEach(request => {
+                                if (request.provider && (request.provider.toString() === req.params.id)) {
+                                    console.log('   matched')
+                                    request.provider = undefined
+                                }
+                            })
+                            db.Event.findByIdAndUpdate(req.params.event, { $set: { requests: requests } }, { autopopulate: false, new: true })
+                                .exec()
+                                .catch(err => console.error(err))
+                        })
+                        .catch(err => console.error(err))
+                }
+
                 if (dbModel) {
                     return res.json(dbModel)
                 }
