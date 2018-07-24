@@ -13,6 +13,13 @@ class Events extends Component {
 
     getEvents = (userId) => API.getUserEvents(userId).then(result => this.setState({ events: result.data })).catch(err => console.error(err))
 
+    handleRSVP(eventId, rsvp) {
+        API.rsvpToEvent(this.props.context.userInfo._id, eventId, rsvp)
+            .then(() => this.getEvents())
+            .catch(err => console.error(err))
+    }
+
+
     componentDidMount() {
         if (this.props.context.userInfo) {
             this.getEvents(this.props.context.userInfo._id)
@@ -43,7 +50,7 @@ class Events extends Component {
                 {this.state.events.length ?
                     this.state.events.map(event => (
                         <CollectionItem key={event._id}>
-                            <EventSummary event={event} userId={this.props.context.userInfo._id} showNav />
+                            <EventSummary event={event} userId={this.props.context.userInfo._id} handleRSVP={(eventId, rsvp) => this.handleRSVP(eventId, rsvp)} showNav />
                         </CollectionItem>
                     ))
                     :
