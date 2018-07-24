@@ -6,6 +6,7 @@
   "dependencies": {
     "moment": "^2.22.2",
     "react": "^16.4.1",
+    "react-add-to-calendar": "^0.1.5",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.4.1",
     "react-facebook-login": "^4.0.1",

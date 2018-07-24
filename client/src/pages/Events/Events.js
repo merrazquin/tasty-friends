@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Container, Card, Collection, CollectionItem } from 'react-materialize'
+import { Container, Collection, CollectionItem } from 'react-materialize'
 import { EventSummary } from '../../components/Events'
 import AuthUserContext from '../../components/Session/AuthUserContext'
 import API from '../../utils/API'
@@ -37,9 +37,7 @@ class Events extends Component {
         }
         return (
             <Container>
-                <Card>
-                    {this.generateEventsList()}
-                </Card>
+                {this.generateEventsList()}
             </Container>
         )
     }

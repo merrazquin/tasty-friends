@@ -1,0 +1,7 @@
+div.react-add-to-calendar {
+    margin-top: 15px;
+}
+
+div.react-add-to-calendar__dropdown {
+    z-index: 999;
+}
