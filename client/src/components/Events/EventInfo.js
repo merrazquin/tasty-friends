@@ -5,7 +5,7 @@ import { EventSummary } from './EventSummary';
 
 export const EventInfo = props => {
     const { editable, userId, header, changeHandler, addressChangeHandler, dateChangeHandler, handleRequestClaims, requestHandler, rsvpHandler, requestRemover, request, eventObj, date, time, address, dateOptions } = props,
-        rsvp = eventObj.guests.find(guest => guest.guest && guest.guest._id === userId)
+        rsvp = eventObj.guests && eventObj.guests.find(guest => guest.guest && guest.guest._id === userId)
     return (
         <div>
             {header}
