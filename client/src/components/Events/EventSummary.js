@@ -36,16 +36,16 @@ export const EventSummary = props => {
 
             {showNav ? <span className="secondary-content"><Link to={"/events/" + _id}><Icon>chevron_right</Icon></Link></span> : null}
             <Row style={{ clear: 'both' }}>
-                <Col s={2}><Icon>lightbulb</Icon></Col>
-                <Col s={10}>{theme || 'N/A'}</Col>
+                <Col s={2} m={1}><Icon>lightbulb</Icon></Col>
+                <Col s={10} m={11}>{theme || 'N/A'}</Col>
             </Row>
             <Row>
-                <Col s={2}><Icon>schedule</Icon></Col>
-                <Col s={10}>{moment(date).format('h:mma')}</Col>
+                <Col s={2} m={1}><Icon>schedule</Icon></Col>
+                <Col s={10} m={11}>{moment(date).format('h:mma')}</Col>
             </Row>
             <Row>
-                <Col s={2}><Icon>place</Icon></Col>
-                <Col s={10}><a href={"https://www.google.com/maps/place/" + formattedAddress.replace(' ', '+')} target="_blank">{formattedAddress}</a></Col>
+                <Col s={2} m={1}><Icon>place</Icon></Col>
+                <Col s={10} m={11}><a href={"https://www.google.com/maps/place/" + formattedAddress.replace(' ', '+')} target="_blank">{formattedAddress}</a></Col>
             </Row>
             {!isHost &&
                 (

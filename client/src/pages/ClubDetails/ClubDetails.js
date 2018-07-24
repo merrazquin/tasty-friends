@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Redirect, Link } from 'react-router-dom'
 import { RIEInput } from 'riek'
 import { SortableContainer, SortableElement, SortableHandle, arrayMove } from 'react-sortable-hoc'
-import { Row, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
+import { Row, Col, Button, Container, Collection, Icon, Card, CollectionItem, Modal } from 'react-materialize'
 import { CenteredPreloader } from '../../components/CenteredPreloader'
 import { FrequencySelector } from '../../components/Clubs'
 import AuthUserContext from '../../components/Session/AuthUserContext'
@@ -171,10 +171,14 @@ class ClubDetails extends Component {
                                     : null
                             }
                             <Row className="left-align">
-                                <h5>Invite friends to join:</h5>
-                                <CopyToClipboard text={club.inviteCode} onCopy={() => this.props.context.popupToast('Copied!', 2000)}>
-                                    <Button className="secondary-content">{club.inviteCode}</Button>
-                                </CopyToClipboard>
+                                <Col>
+                                    <h5>Invite friends to join:</h5>
+                                </Col>
+                                <Col className="input-field">
+                                    <CopyToClipboard text={club.inviteCode} onCopy={() => this.props.context.popupToast('Copied!', 2000)}>
+                                        <Button style={{marginTop:-5}}>{club.inviteCode}</Button>
+                                    </CopyToClipboard>
+                                </Col>
                             </Row>
                         </Card>
 

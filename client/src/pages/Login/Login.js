@@ -17,7 +17,7 @@ class Login extends Component {
                         return context.userInfo ?
                             (
                                 <Container>
-                                    <h1>Hi, {context.userInfo.displayName}</h1>
+                                    <h3>Hi, {context.userInfo.displayName}!</h3>
                                     <img alt={context.userInfo.displayName + "'s avatar"} className="circle" src={context.userInfo.avatar || "/images/default-avatar.png"} />
                                     <p>
                                         <Button onClick={context.logout}>Log out</Button>
